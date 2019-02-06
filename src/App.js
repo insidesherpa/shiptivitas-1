@@ -1,27 +1,53 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.css';
+import HomeTab from './HomeTab';
+import Navigation from './Navigation';
+import Board from './Board';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTab: 'home',
+    };
+  }
+  renderShippingRequests() {
+    return (<Board />);
+  }
+
+  renderNavigation() {
+    return (<Navigation
+      onClick={(tabName) => this.changeTab(tabName)}
+      selectedTab={this.state.selectedTab}
+      />);
+  }
+
+  renderTabContent() {
+    switch(this.state.selectedTab) {
+      case 'home':
+      default:
+        return HomeTab();
+      case 'shipping-requests':
+        return this.renderShippingRequests();
+    }
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {this.renderNavigation()}
+
+        <div className="App-body">
+          {this.renderTabContent()}
+        </div>
       </div>
     );
+  }
+
+  changeTab(tabName) {
+    this.setState({
+      selectedTab: tabName,
+    });
   }
 }
 
