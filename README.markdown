@@ -6,9 +6,9 @@
   | 
   <a href="#installation"> Installation </a>
   |
-  <a href="#https://www.insidesherpa.com/modules/oRMogWRHeewqHzA7u/58dLdeDgbwf9Ste3j"> Link to Module 1 </a>
+  <a href="https://www.insidesherpa.com/modules/oRMogWRHeewqHzA7u/58dLdeDgbwf9Ste3j"> Link to Module 1 </a>
   |
-  <a href="#https://www.insidesherpa.com/virtual-internships/prototype/oRMogWRHeewqHzA7u/College%20Students%3A%20Learn%20how%20to%20work%20at%20a%20YC%20startup" target="_blank"> Link to Y Combinator Program </a>
+  <a href="https://www.insidesherpa.com/virtual-internships/prototype/oRMogWRHeewqHzA7u/College%20Students%3A%20Learn%20how%20to%20work%20at%20a%20YC%20startup" target="_blank"> Link to Y Combinator Program </a>
            
 </p>
 
@@ -23,6 +23,8 @@ Train online for the skills Y Combinator startups are looking for. One of the of
 <h2 id="task">Task</h2>
 <b> Working Fullstack 1: </b> Frontend updates based on feedback.
 Help update the frontend of a new productivity tool for shipping
+
+<h2 id="installation"> Installation </h2>
 
 ## Available Scripts
 
