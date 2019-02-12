@@ -4,11 +4,11 @@
 <p align='center'> 
   <a href="#task> Task </a>  
   | 
-  <a href="#installation> Installation </a>
+  <a href="#installation"> Installation </a>
   |
-  <a href="#https://www.insidesherpa.com/modules/oRMogWRHeewqHzA7u/58dLdeDgbwf9Ste3j> Link to Module 1 </a>
+  <a href="#https://www.insidesherpa.com/modules/oRMogWRHeewqHzA7u/58dLdeDgbwf9Ste3j"> Link to Module 1 </a>
   |
-  <a href="#https://www.insidesherpa.com/virtual-internships/prototype/oRMogWRHeewqHzA7u/College%20Students%3A%20Learn%20how%20to%20work%20at%20a%20YC%20startup target="_blank"> Link to Y Combinator Program </a>
+  <a href="#https://www.insidesherpa.com/virtual-internships/prototype/oRMogWRHeewqHzA7u/College%20Students%3A%20Learn%20how%20to%20work%20at%20a%20YC%20startup" target="_blank"> Link to Y Combinator Program </a>
            
 </p>
 
