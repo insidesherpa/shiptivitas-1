@@ -13,7 +13,7 @@
 </p>
 
 
-<h1< Introduction </h1>
+<h1> Introduction </h1>
 <p> 
 <b> College Students: 
   Learn how to work at a Y Combinator startup </b>
