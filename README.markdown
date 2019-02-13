@@ -6,7 +6,6 @@
   <img src="https://s3-ap-southeast-2.amazonaws.com/insidesherpa-assets/yc/workatastartup_logo_orange-c2a27f6374f9395166ee9906e2e0873af835b3c6132ae6aa0543582298567041.svg"></a>
 </p>
 
-[link](https://www.insidesherpa.com/){:target="_blank"}
 
 <p align='center'> 
   <a href="#task"> Task </a>  
