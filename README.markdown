@@ -8,7 +8,7 @@
 
 
 <p align='center'> 
-  <a href="#task"> Task </a>  
+  <a href="#task"> Task Overview </a>  
   | 
   <a href="#installation"> Installation </a>
   |
@@ -26,7 +26,7 @@
 <br>Train online for the skills Y Combinator startups are looking for. One of the official ways to get recruited into a Y Combinator startup.
 </p>
 
-<h2 id="task">Task</h2>
+<h2 id="task">Module 1 Task Overview</h2>
 <b> Working Fullstack 1: </b> Frontend updates based on feedback.
 Help update the frontend of a new productivity tool for shipping.
 <br><br>
