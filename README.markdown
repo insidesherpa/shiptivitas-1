@@ -36,7 +36,7 @@ Help update the frontend of a new productivity tool for shipping.
 <h2 id="installation"> Installation </h2>
 
 1. Clone the Shiptivity frontend repository
-2. Make the necessary changes to the code (frontend only) and make use of the <a href="dragula"> Dragula tool </a>
+2. Make the necessary changes to the code (frontend only) and make use of the <a href="#dragula"> Dragula tool </a>
 
 Acceptance Criteria
 ..* In the "Shipping Requests" tab of the application, all tasks should show in the backlog swimlane.
