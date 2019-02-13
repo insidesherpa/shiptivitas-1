@@ -19,18 +19,31 @@
 </p>
 
 
-<h1> Introduction </h1>
+# Introduction 
 <p> 
 <b> College Students: 
   Learn how to work at a Y Combinator startup </b>
-Train online for the skills Y Combinator startups are looking for. One of the official ways to get recruited into a Y Combinator startup.
+<br>Train online for the skills Y Combinator startups are looking for. One of the official ways to get recruited into a Y Combinator startup.
 </p>
 
 <h2 id="task">Task</h2>
 <b> Working Fullstack 1: </b> Frontend updates based on feedback.
-Help update the frontend of a new productivity tool for shipping
+Help update the frontend of a new productivity tool for shipping.
+<br>
+**Aim:** Your task is to take the base shipping productivity tool and add in the ability for the new feature, the kanban board, to move shipping requests, to two new lane statuses (in-progress and complete). 
+<br>**Don't worry about any backend updates for now.**
 
 <h2 id="installation"> Installation </h2>
+
+1. Clone the Shiptivity frontend repository
+2. Make the necessary changes to the code (frontend only) and make use of the <a href="dragula"> Dragula tool </a>
+
+Acceptance Criteria
+..* In the "Shipping Requests" tab of the application, all tasks should show in the backlog swimlane.
+..* There should be 3 swimlanes.
+..* When a user drags a card up, down or into another swimlane, it reorders the card and stays there. (frontend only)
+..* When a card changes swimlane, it should change color 
+
 
 ## Available Scripts
 
@@ -38,7 +51,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.
+this runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.
@@ -53,7 +66,9 @@ interface Client {
   status: 'backlog' | 'in-progress' | 'complete,
 }
 
-Dragula library has been installed, you can use it by importing it on top of each file that you need
+<p id="dragula">
+The Dragula library has been installed, you can use it by importing it on top of each file that you need
+<p> 
 
 ### `import Dragula from 'dragula';`
 
