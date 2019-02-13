@@ -30,8 +30,7 @@
 <b> Working Fullstack 1: </b> Frontend updates based on feedback.
 Help update the frontend of a new productivity tool for shipping.
 <br><br>
-<b> Aim: </b> Your task is to take the base shipping productivity tool and add in the ability for the new feature, the kanban board, to move shipping requests, to two new lane statuses (in-progress and complete). 
-<br><b><i> Don't worry about any backend updates for now.</i></b>
+<b> Aim: </b> Your task is to take the base shipping productivity tool and add in the ability for the new feature, the kanban board, to move shipping requests, to two new lane statuses (in-progress and complete). <b><i> Don't worry about any backend updates for now.</i></b>
 <br><br>
 Acceptance Criteria
 <ul>
