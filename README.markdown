@@ -31,8 +31,8 @@
 Help update the frontend of a new productivity tool for shipping.
 <br><br>
 <b> Aim: </b> Your task is to take the base shipping productivity tool and add in the ability for the new feature, the kanban board, to move shipping requests, to two new lane statuses (in-progress and complete). 
-<br><b>**Don't worry about any backend updates for now.**</b>
-<br>
+<br><b><i> Don't worry about any backend updates for now.</i></b>
+<br><br>
 Acceptance Criteria
 <ul>
 <li> In the "Shipping Requests" tab of the application, all tasks should show in the backlog swimlane.</li>
