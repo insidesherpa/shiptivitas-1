@@ -32,12 +32,7 @@ Help update the frontend of a new productivity tool for shipping.
 <br><br>
 <b> Aim: </b> Your task is to take the base shipping productivity tool and add in the ability for the new feature, the kanban board, to move shipping requests, to two new lane statuses (in-progress and complete). 
 <br><b>**Don't worry about any backend updates for now.**</b>
-
-<h2 id="installation"> Installation </h2>
-
-1. Clone the Shiptivity frontend repository
-2. Make the necessary changes to the code (frontend only) and make use of the <a href="#dragula"> Dragula tool </a>
-
+<br>
 Acceptance Criteria
 <ul>
 <li> In the "Shipping Requests" tab of the application, all tasks should show in the backlog swimlane.</li>
@@ -45,6 +40,11 @@ Acceptance Criteria
 <li> When a user drags a card up, down or into another swimlane, it reorders the card and stays there. (frontend only)</li>
 <li> When a card changes swimlane, it should change color </li>
 </ul>
+
+<h2 id="installation"> Installation </h2>
+
+1. Clone the Shiptivity frontend repository
+2. Make the necessary changes to the code (frontend only) and make use of the <a href="#dragula"> Dragula tool </a>
 
 ## Available Scripts
 
