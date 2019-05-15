@@ -1,6 +1,10 @@
 {
   "name": "yc-task1",
   "version": "0.1.0",
+  "engines": {
+    "npm": "6.7.0",
+    "node": "11.10.0"
+  },
   "private": true,
   "dependencies": {
     "bootstrap": "^4.2.1",
