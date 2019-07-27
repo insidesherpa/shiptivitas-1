@@ -1,0 +1,25 @@
+.Card {
+  background-color: lightgrey;
+  font-size: 12px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.Card-grey {
+  background-color: rgba(167, 158, 158, 0.671);
+  color: black;
+}
+
+.Card-blue {
+  background-color: skyblue;
+  color: white;
+}
+
+.Card-green {
+  background-color: rgb(150, 190, 150);
+  color: white;
+}
+
+.Card-title {
+  font-weight: bold;
+}
