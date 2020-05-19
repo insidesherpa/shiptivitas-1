@@ -55,20 +55,26 @@ export default class Board extends React.Component {
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
     );
   }
+  dragulaDecorator = (componentBackingInstance) => {
+    if (componentBackingInstance) {
+      let options = { };
+      Dragula([componentBackingInstance], options);
+    }
+  };
 
   render() {
     return (
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-4">
-              {this.renderSwimlane('Backlog', this.state.clients.backlog, this.swimlanes.backlog)}
+            <div className="col-md-4" id="backlog">
+              {this.renderSwimlane('Backlog', this.state.clients.backlog, this.dragulaDecorator)}
             </div>
-            <div className="col-md-4">
-              {this.renderSwimlane('In Progress', this.state.clients.inProgress, this.swimlanes.inProgress)}
+            <div className="col-md-4" id="inProgress">
+              {this.renderSwimlane('In Progress', this.state.clients.inProgress, this.dragulaDecorator)}
             </div>
-            <div className="col-md-4">
-              {this.renderSwimlane('Complete', this.state.clients.complete, this.swimlanes.complete)}
+            <div className="col-md-4" id="complete">
+              {this.renderSwimlane('Complete', this.state.clients.complete, this.dragulaDecorator)}
             </div>
           </div>
         </div>
