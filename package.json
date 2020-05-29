@@ -7,9 +7,9 @@
   },
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.2.1",
+    "bootstrap": "^4.4.1",
     "dragula": "^3.7.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "popper.js": "^1.14.7",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
