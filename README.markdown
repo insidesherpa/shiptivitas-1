@@ -49,7 +49,13 @@ Acceptance Criteria
 
 ## Available Scripts
 
+
+
 In the project directory, you can run:
+
+### `npm install`
+
+this installs all the necessary node modules for the project.
 
 ### `npm start`
 
