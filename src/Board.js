@@ -47,7 +47,7 @@ export default class Board extends React.Component {
       id: companyDetails[0],
       name: companyDetails[1],
       description: companyDetails[2],
-      status: companyDetails[3],
+      status: 'backlog',
     }));
   }
   renderSwimlane(name, clients, ref) {
@@ -56,9 +56,29 @@ export default class Board extends React.Component {
     );
   }
 
+  componentDidMount(){
+    console.log("ran");
+    
+    Dragula([this.swimlanes.backlog.current,this.swimlanes.inProgress.current,this.swimlanes.complete.current])
+    .on('drop',(el,target)=>{
+      if(target.parentNode.firstChild.textContent==="Backlog"){
+        el.className="Card Card-grey"
+      }
+      else if(target.parentNode.firstChild.textContent==="In Progress"){
+        el.className="Card Card-blue"
+      }
+      else{
+        el.className="Card Card-green"
+      }
+    })
+  }
+  
+
   render() {
+   
+
     return (
-      <div className="Board">
+      <div className="Board" id="left">
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-4">
