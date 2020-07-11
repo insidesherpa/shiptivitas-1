@@ -5,6 +5,12 @@ import Swimlane from "./Swimlane";
 import "./Board.css";
 
 export default class Board extends React.Component {
+  dragulaInit = (containers) => {
+    if (containers) {
+      let options = {};
+      Dragula([containers], options);
+    }
+  };
   constructor(props) {
     super(props);
     const clients = this.getClients();
@@ -95,7 +101,7 @@ export default class Board extends React.Component {
         "Progressive Bandwidth-Monitored Access",
         "backlog",
       ],
-      ["17", "Brekke PLC", "Intuitive User-Facing Customerloyalty", "backlog"],
+      ["17", "Brekke PLC", "Intuitive User-Facing Customerloyalty", "complete"],
       [
         "18",
         "Bins, Toy and Klocko",
@@ -108,7 +114,12 @@ export default class Board extends React.Component {
         "Programmable Systematic Securedline",
         "backlog",
       ],
-      ["20", "Murphy, Lang and Ferry", "Organized Explicit Access", "backlog"],
+      [
+        "20",
+        "Murphy, Lang and Ferry",
+        "Organized Explicit Access",
+        "in-progress",
+      ],
     ].map((companyDetails) => ({
       id: companyDetails[0],
       name: companyDetails[1],
@@ -116,8 +127,10 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
-  renderSwimlane(name, clients, ref) {
-    return <Swimlane name={name} clients={clients} dragulaRef={ref} />;
+  renderSwimlane(name, clients) {
+    return (
+      <Swimlane name={name} clients={clients} dragulaRef={this.dragulaInit} />
+    );
   }
 
   render() {
@@ -125,26 +138,17 @@ export default class Board extends React.Component {
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-4 Swimlane-column">
-              {this.renderSwimlane(
-                "Backlog",
-                this.state.clients.backlog,
-                this.swimlanes.backlog
-              )}
+            <div className="col-md-4">
+              {this.renderSwimlane("Backlog", this.state.clients.backlog)}
             </div>
-            <div className="col-md-4 Swimlane-column">
+            <div className="col-md-4">
               {this.renderSwimlane(
                 "In Progress",
-                this.state.clients.inProgress,
-                this.swimlanes.inProgress
+                this.state.clients.inProgress
               )}
             </div>
-            <div className="col-md-4 Swimlane-column">
-              {this.renderSwimlane(
-                "Complete",
-                this.state.clients.complete,
-                this.swimlanes.complete
-              )}
+            <div className="col-md-4">
+              {this.renderSwimlane("Complete", this.state.clients.complete)}
             </div>
           </div>
         </div>
