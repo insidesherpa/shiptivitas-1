@@ -125,21 +125,21 @@ export default class Board extends React.Component {
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-4 Swimlane-column">
               {this.renderSwimlane(
                 "Backlog",
                 this.state.clients.backlog,
                 this.swimlanes.backlog
               )}
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 Swimlane-column">
               {this.renderSwimlane(
                 "In Progress",
                 this.state.clients.inProgress,
                 this.swimlanes.inProgress
               )}
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 Swimlane-column">
               {this.renderSwimlane(
                 "Complete",
                 this.state.clients.complete,
