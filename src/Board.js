@@ -5,12 +5,6 @@ import Swimlane from "./Swimlane";
 import "./Board.css";
 
 export default class Board extends React.Component {
-  dragulaInit = (containers) => {
-    if (containers) {
-      let options = {};
-      Dragula([containers], options);
-    }
-  };
   constructor(props) {
     super(props);
     const clients = this.getClients();
@@ -33,6 +27,31 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     };
   }
+  componentDidMount() {
+    Dragula(
+      [
+        document.getElementById("backlog"),
+        document.getElementById("in-progress"),
+        document.getElementById("complete"),
+      ],
+      {
+        accepts: function(el, target, source, sibling) {
+          el.setAttribute("data-status", target.id);
+          let className = ["Card"];
+          if (target.id === "backlog") {
+            className.push("Card-grey");
+          } else if (target.id === "in-progress") {
+            className.push("Card-blue");
+          } else if (target.id === "complete") {
+            className.push("Card-green");
+          }
+          el.classList = className.join(" ");
+          return true; // elements can be dropped in any of the `containers` by default
+        },
+      }
+    );
+  }
+
   getClients() {
     return [
       [
@@ -127,10 +146,8 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
-  renderSwimlane(name, clients) {
-    return (
-      <Swimlane name={name} clients={clients} dragulaRef={this.dragulaInit} />
-    );
+  renderSwimlane(name, clients, id) {
+    return <Swimlane name={name} clients={clients} id={id} />;
   }
 
   render() {
@@ -139,16 +156,25 @@ export default class Board extends React.Component {
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-4">
-              {this.renderSwimlane("Backlog", this.state.clients.backlog)}
+              {this.renderSwimlane(
+                "Backlog",
+                this.state.clients.backlog,
+                "backlog"
+              )}
             </div>
             <div className="col-md-4">
               {this.renderSwimlane(
                 "In Progress",
-                this.state.clients.inProgress
+                this.state.clients.inProgress,
+                "in-progress"
               )}
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane("Complete", this.state.clients.complete)}
+              {this.renderSwimlane(
+                "Complete",
+                this.state.clients.complete,
+                "complete"
+              )}
             </div>
           </div>
         </div>
