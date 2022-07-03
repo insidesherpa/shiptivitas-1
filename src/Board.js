@@ -74,5 +74,40 @@ export default class Board extends React.Component {
         </div>
       </div>
     );
-  }
+  } 
 }
+
+var drake = Dragula({
+  isContainer: function (el) {
+    return el.classList.contains('Swimlane-dragColumn');
+  },
+  copySortSource: true,
+  revertOnSpill: true,
+});
+
+// Function that updates the card based on the target container's lane value
+function clientUpdate(el, target) {
+  // Sets 'lane' variable to the corresponding lane of the target container
+  var lane = target.parentElement.firstChild.textContent
+  var laneClass = ''
+  var laneStatus = ''
+  // Sets 'laneClass' and 'laneStatus' variables according to lane variable value
+  if (lane === 'Backlog') {
+    laneClass = 'Card Card-grey'
+    laneStatus = 'backlog'
+  } else if (lane === 'In Progress') {
+    laneClass = 'Card Card-blue'
+    laneStatus = 'in-progress'
+  } else {
+    laneClass = 'Card Card-green'
+    laneStatus = 'complete'
+  }
+  // Updates the element to reflect the 'laneClass' and 'laneStatus' values
+  el.setAttribute('class', laneClass)
+  el.setAttribute('data-status', laneStatus)
+}
+
+// When a client card is dropped into a lane -> updates card color and data-status attribute
+drake.on('drop', 
+  (el, target) => clientUpdate(el, target)
+);
