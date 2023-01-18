@@ -64,7 +64,6 @@ export default class Board extends React.Component {
           this.resetUi()
         })
   }
-
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -99,10 +98,6 @@ export default class Board extends React.Component {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
     );
-  }
-
-  componentWillUnmount = () =>{
-    console.log("ready to unmount")
   }
 
   render() {
