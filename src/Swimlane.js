@@ -15,10 +15,12 @@ export default class Swimlane extends React.Component {
         />
       );
     })
+    console.log(this.props)
+    const id = this.props.name.toLowerCase().replace(" ","-")
     return (
       <div className="Swimlane-column">
         <div className="Swimlane-title">{this.props.name}</div>
-        <div className="Swimlane-dragColumn" ref={this.props.dragulaRef}>
+        <div id={id} className="Swimlane-dragColumn" ref={this.props.dragulaRef}>
           {cards}
         </div>
       </div>);

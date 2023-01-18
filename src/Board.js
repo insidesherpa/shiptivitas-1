@@ -7,7 +7,35 @@ import './Board.css';
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
-    const clients = this.getClients();
+    let clients = this.getClients();
+    this.resetClients = (id, newStatus) =>{
+      clients = clients.map((cl)=>{
+        if(cl.id=== id){
+          cl.status = newStatus
+        }
+        return cl
+      })
+    }
+    this.resetUi = () => {
+      // const clientsObj = {
+      //   backlog:[],inProgress:[], complete:[]
+      // }
+      // for(let i = 0; i < clients.length;i++){
+      //   const client = clients[i]
+      //   if(client.status.toLocaleLowerCase() === "in-progress"){
+      //     clientsObj.inProgress.push(client)
+      //   }else{
+      //     clientsObj[client.status].push(client)
+      //   }
+      // }
+      // return this.setState({...this.state,clients:clientsObj})
+
+      return this.setState({
+          backlog: clients.filter(client => !client.status || client.status === 'backlog'),
+          inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
+          complete: clients.filter(client => client.status && client.status === 'complete'),
+        })
+      }
     this.state = {
       clients: {
         backlog: clients.filter(client => !client.status || client.status === 'backlog'),
@@ -20,6 +48,19 @@ export default class Board extends React.Component {
       inProgress: React.createRef(),
       complete: React.createRef(),
     }
+  }
+
+
+  componentDidMount = () =>{
+    const drake = Dragula([this.swimlanes.backlog.current, this.swimlanes.inProgress.current, this.swimlanes.complete.current],{
+                    copy:()=>false
+                  })
+        drake.on("drop",(el,target)=>{
+          const {id} = el.dataset;
+          const targetStatus = target.id;
+          this.resetClients(id,targetStatus)
+          this.resetUi()
+        })
   }
   getClients() {
     return [
@@ -54,6 +95,10 @@ export default class Board extends React.Component {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
     );
+  }
+
+  componentWillUnmount = () =>{
+    console.log("ready to unmount")
   }
 
   render() {
