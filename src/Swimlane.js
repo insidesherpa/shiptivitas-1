@@ -15,7 +15,6 @@ export default class Swimlane extends React.Component {
         />
       );
     })
-    console.log(this.props)
     const id = this.props.name.toLowerCase().replace(" ","-")
     return (
       <div className="Swimlane-column">

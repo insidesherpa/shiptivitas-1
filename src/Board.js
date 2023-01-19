@@ -52,9 +52,11 @@ export default class Board extends React.Component {
 
 
   componentDidMount = () =>{
-    const drake = Dragula([this.swimlanes.backlog.current, this.swimlanes.inProgress.current, this.swimlanes.complete.current],{
-                    copy:()=>false
-                  })
+    const drake = Dragula([this.swimlanes.backlog.current,
+                           this.swimlanes.inProgress.current,
+                           this.swimlanes.complete.current],
+                           {copy:()=>false})
+                           
         drake.on("drop",(el,target)=>{
           const {id} = el.dataset;
           const targetStatus = target.id;
@@ -62,6 +64,7 @@ export default class Board extends React.Component {
           this.resetUi()
         })
   }
+
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -91,14 +94,11 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
+
   renderSwimlane(name, clients, ref) {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
     );
-  }
-
-  componentWillUnmount = () =>{
-    console.log("ready to unmount")
   }
 
   render() {
