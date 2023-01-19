@@ -101,6 +101,10 @@ export default class Board extends React.Component {
     );
   }
 
+  componentWillUnmount = () =>{
+    console.log("ready to unmount")
+  }
+
   render() {
     return (
       <div className="Board">

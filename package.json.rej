@@ -1,0 +1,20 @@
+diff a/package.json b/package.json	(rejected hunks)
+@@ -8,7 +8,7 @@
+   "private": true,
+   "dependencies": {
+     "bootstrap": "^4.2.1",
+-    "dragula": "^3.7.2",
++    "dragula": "^3.7.3",
+     "jquery": "^3.3.1",
+     "popper.js": "^1.14.7",
+     "react": "^16.7.0",
+@@ -21,9 +21,6 @@
+     "test": "react-scripts test",
+     "eject": "react-scripts eject"
+   },
+-  "eslintConfig": {
+-    "extends": "react-app"
+-  },
+   "browserslist": [
+     ">0.2%",
+     "not dead",
