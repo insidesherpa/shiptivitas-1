@@ -1,13 +1,13 @@
 // components
 import "./Board.css";
 import Swimlane from "./Swimlane";
-// data
-import { clientsData } from "./data";
 // dragula
 import dragula from "dragula";
 import "dragula/dist/dragula.css";
 // react
 import React from "react";
+// utils
+import { clientsData } from "./utils/data";
 
 export default class Board extends React.Component {
     constructor(props) {
