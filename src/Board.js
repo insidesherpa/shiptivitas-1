@@ -8,6 +8,7 @@ import "dragula/dist/dragula.css";
 import React from "react";
 // utils
 import { clientsData } from "./utils/data";
+import { moveElementToIndex } from "./utils/board";
 
 export default class Board extends React.Component {
     constructor(props) {
@@ -49,34 +50,160 @@ export default class Board extends React.Component {
         const inProgressContainer = this.swimlanes.inProgress.current;
         const completedContainer = this.swimlanes.completed.current;
 
-        const drake = dragula(
+        this.drake = dragula(
             [backlogContainer, inProgressContainer, completedContainer],
             {
                 revertOnSpill: true,
             }
         );
 
-        drake.on("drop", (element, target, source, sibling) => {
-            let {
-                previousElementSibling: { innerHTML: targetTitle },
+        this.drake.on("drop", (element, target, source, sibling) => {
+            const {
+                dataset: { id: elementId, status: elementStatus },
+            } = element;
+            const {
+                previousElementSibling: { innerHTML: _targetTitle },
             } = target;
 
-            targetTitle = targetTitle.toLowerCase().replaceAll(" ", "-");
+            const targetTitle = _targetTitle.toLowerCase().replaceAll(" ", "-");
+
+            let { clients } = this.state;
+
+            let filteredElement, filteredElements;
+
+            // revert changes made to DOM
+            this.drake.cancel(true);
+            switch (elementStatus) {
+                case "backlog":
+                    filteredElement = clients.backlog.find(
+                        (client) => client.id === elementId
+                    );
+
+                    filteredElements = clients.backlog.filter(
+                        (client) => client.id !== elementId
+                    );
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        clients: {
+                            ...prevState.clients,
+                            backlog: filteredElements,
+                        },
+                    }));
+                    break;
+                case "in-progress":
+                    filteredElement = clients.inProgress.find(
+                        (client) => client.id === elementId
+                    );
+
+                    filteredElements = clients.inProgress.filter(
+                        (client) => client.id !== elementId
+                    );
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        clients: {
+                            ...prevState.clients,
+                            inProgress: filteredElements,
+                        },
+                    }));
+                    break;
+                case "completed":
+                    filteredElement = clients.completed.find(
+                        (client) => client.id === elementId
+                    );
+
+                    filteredElements = clients.completed.filter(
+                        (client) => client.id !== elementId
+                    );
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        clients: {
+                            ...prevState.clients,
+                            completed: filteredElements,
+                        },
+                    }));
+                    break;
+                default:
+                    break;
+            }
+
+            clients = this.state.clients;
+            let index;
 
             switch (targetTitle) {
                 case "backlog":
-                    element.className = "Card Card-grey";
+                    index =
+                        sibling === null
+                            ? -1
+                            : clients.backlog.findIndex(
+                                  (client) => client.id === sibling.dataset.id
+                              );
+
+                    // update filteredElementStatus
+                    filteredElement.status = "backlog";
+
+                    let backlog = moveElementToIndex(
+                        filteredElement,
+                        index,
+                        clients.backlog
+                    );
+
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        clients: { ...prevState.clients, backlog },
+                    }));
                     break;
                 case "in-progress":
-                    element.className = "Card Card-blue";
+                    index =
+                        sibling === null
+                            ? -1
+                            : clients.inProgress.findIndex(
+                                  (client) => client.id === sibling.dataset.id
+                              );
+
+                    // update filteredElementStatus
+                    filteredElement.status = "in-progress";
+
+                    let inProgress = moveElementToIndex(
+                        filteredElement,
+                        index,
+                        clients.inProgress
+                    );
+
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        clients: { ...prevState.clients, inProgress },
+                    }));
                     break;
                 case "completed":
-                    element.className = "Card Card-green";
+                    index =
+                        sibling == null
+                            ? -1
+                            : clients.completed.findIndex(
+                                  (client) => client.id === sibling.dataset.id
+                              );
+
+                    // update filteredElementStatus
+                    filteredElement.status = "completed";
+
+                    let completed = moveElementToIndex(
+                        filteredElement,
+                        index,
+                        clients.completed
+                    );
+
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        clients: { ...prevState.clients, completed },
+                    }));
                     break;
                 default:
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+        this.drake.remove();
     }
 
     render() {
