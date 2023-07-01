@@ -1,108 +1,86 @@
 import React from 'react';
+import dragula from 'dragula';
 import Swimlane from './Swimlane';
 import './Board.css';
-import 'dragula/dist/dragula.css';
-import reactDragula from 'react-dragula';
-
-
-/**
- * Approach
- * 1. Declare a state of clients with an empty array for the backlog, in-progress and complete status
- * 2. Use the getclients function to update the state (Components will re-render on any state changes)
- * 3. Check if the app works and verify all  the fields from the API are present on the frontend
- */
 
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.getClients = this.getClients.bind(this);
-    this.setState = this.setState.bind(this);
+    const clients = this.getClients();
     this.state = {
       clients: {
-        backlog: [],
-        inProgress:[],
-        complete:[],
-      }
-    }
+        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
+        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
+        complete: clients.filter(client => client.status && client.status === 'complete'),
+      },
+    };
+    this.swimlanes = {
+      backlog: React.createRef(),
+      inProgress: React.createRef(),
+      complete: React.createRef(),
+    };
   }
-  
-  async getClients() {
-    const clients = await fetch('https://shiptivita2.herokuapp.com/api/v1/clients')
-    .then(response => response.json())
-    
-     this.setState ({
-     clients: {
-      backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-      inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-      complete: clients.filter(client => client.status && client.status === 'complete'),
-    }
-  })
-};
 
-  renderSwimlane(name, clients) {
-    return (
-      <Swimlane name={name} clients={clients} />
-    );
-  };
+  getClients() {
+    return [
+      ['1', 'Stark, White and Abbott', 'Cloned Optimal Architecture', 'in-progress'],
+      ['2', 'Wiza LLC', 'Exclusive Bandwidth-Monitored Implementation', 'complete'],
+      ['3', 'Nolan LLC', 'Vision-Oriented 4Thgeneration Graphicaluserinterface', 'backlog'],
+      ['4', 'Thompson PLC', 'Streamlined Regional Knowledgeuser', 'in-progress'],
+      ['5', 'Walker-Williamson', 'Team-Oriented 6Thgeneration Matrix', 'in-progress'],
+      ['6', 'Boehm and Sons', 'Automated Systematic Paradigm', 'backlog'],
+      ['7', 'Runolfsson, Hegmann and Block', 'Integrated Transitional Strategy', 'backlog'],
+      ['8', 'Schumm-Labadie', 'Operative Heuristic Challenge', 'backlog'],
+      ['9', 'Kohler Group', 'Re-Contextualized Multi-Tasking Attitude', 'backlog'],
+      ['10', 'Romaguera Inc', 'Managed Foreground Toolset', 'backlog'],
+      ['11', 'Reilly-King', 'Future-Proofed Interactive Toolset', 'complete'],
+      ['12', 'Emard, Champlin and Runolfsdottir', 'Devolved Needs-Based Capability', 'backlog'],
+      ['13', 'Fritsch, Cronin and Wolff', 'Open-Source 3Rdgeneration Website', 'complete'],
+      ['14', 'Borer LLC', 'Profit-Focused Incremental Orchestration', 'backlog'],
+      ['15', 'Emmerich-Ankunding', 'User-Centric Stable Extranet', 'in-progress'],
+      ['16', 'Willms-Abbott', 'Progressive Bandwidth-Monitored Access', 'in-progress'],
+      ['17', 'Brekke PLC', 'Intuitive User-Facing Customerloyalty', 'complete'],
+      ['18', 'Bins, Toy and Klocko', 'Integrated Assymetric Software', 'backlog'],
+      ['19', 'Hodkiewicz-Hayes', 'Programmable Systematic Securedline', 'backlog'],
+      ['20', 'Murphy, Lang and Ferry', 'Organized Explicit Access', 'backlog'],
+    ].map(companyDetails => ({
+      id: companyDetails[0],
+      name: companyDetails[1],
+      description: companyDetails[2],
+      status: companyDetails[3],
+    }));
+  }
+
+  componentDidMount() {
+    this.initializeDragula();
+  }
+
+  initializeDragula() {
+    const containers = Object.values(this.swimlanes).map(ref => ref.current);
+    dragula(containers);
+  }
+
+  renderSwimlane(name, clients, ref) {
+    return <Swimlane name={name} clients={clients} dragulaRef={ref} />;
+  }
 
   render() {
-    console.log("rendered")
     return (
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
-            <div id="backlog" className="col-md-4 Swimlane-column">
-              {this.renderSwimlane('Backlog', this.state.clients.backlog)}
+            <div className="col-md-4">
+              {this.renderSwimlane('Backlog', this.state.clients.backlog, this.swimlanes.backlog)}
             </div>
-            <div id="inprogress" className="col-md-4 Swimlane-column">
-              {this.renderSwimlane('In Progress', this.state.clients.inProgress)}
+            <div className="col-md-4">
+              {this.renderSwimlane('In Progress', this.state.clients.inProgress, this.swimlanes.inProgress)}
             </div>
-            <div id="complete" className="col-md-4 Swimlane-column">
-              {this.renderSwimlane('Complete', this.state.clients.complete)}
+            <div className="col-md-4">
+              {this.renderSwimlane('Complete', this.state.clients.complete, this.swimlanes.complete)}
             </div>
           </div>
         </div>
       </div>
-      
     );
-  }
-
-  getCount(id){
-    return document.getElementById(id).children.length
-  }
-
-  componentDidMount() {
-    this.getClients();
-    const data = Array.from(document.getElementsByClassName("Swimlane-dragColumn"));
-    const ref = reactDragula(data);
-    const colors = {
-      'Backlog': 'Card-grey',
-       "In Progress":"Card-blue",
-       "Complete":"Card-green",
-    }
-    const idMap = {
-      'Backlog': 'backlog',
-       "In Progress":"in-progress",
-       "Complete":"complete",
-    }
-    ref.on("drop", (el, target, source, sibling) => {
-      const className = ['Card']
-      className.push(colors[target.id]);
-      el.className = className.join(' ');
-
-      console.log(source.id, `: ${this.getCount(source.id)}`,  " to ", target.id, `: ${this.getCount(target.id)}`)
-      console.log(el, sibling)
-      // console.log("moved from", el.dataset.priority, "in", source.id, "to", sibling.dataset.priority, "in", target.id)
-
-      fetch(`https://shiptivita2.herokuapp.com/api/v1/clients${el.dataset.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({status: idMap[target.id], priority: sibling ? sibling.dataset.priority : this.getCount(target.id) + 1}),
-      }).then(() => {
-        this.getClients();
-      });
-    });
   }
 }
