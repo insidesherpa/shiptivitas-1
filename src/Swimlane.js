@@ -1,10 +1,10 @@
-import React from 'react';
-import Card from './Card';
-import './Swimlane.css';
+import React from "react";
+import Card from "./Card";
+import "./Swimlane.css";
 
 export default class Swimlane extends React.Component {
   render() {
-    const cards = this.props.clients.map(client => {
+    const cards = this.props.clients.map((client) => {
       return (
         <Card
           key={client.id}
@@ -14,14 +14,18 @@ export default class Swimlane extends React.Component {
           status={client.status}
         />
       );
-    })
+    });
     return (
       <div className="Swimlane-column">
         <div className="Swimlane-title">{this.props.name}</div>
-        <div className="Swimlane-dragColumn" ref={this.props.dragulaRef}>
+        <div
+          className="Swimlane-dragColumn"
+          ref={this.props.dragulaRef}
+          data-status={this.props.name.toLowerCase()}
+        >
           {cards}
         </div>
-      </div>);
+      </div>
+    );
   }
-
 }
