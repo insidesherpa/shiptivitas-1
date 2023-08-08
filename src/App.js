@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import HomeTab from './HomeTab';
 import Navigation from './Navigation';
 import Board from './Board';
+import ShippingRequests from './ShippingRequests';
 import './App.css';
 
 class App extends Component {
