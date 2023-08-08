@@ -1,0 +1,36 @@
+/* ShippingRequests.css */
+
+.kanban-board {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+  }
+  
+  .swimlane {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+  
+  /* Styling for swimlane statuses */
+  .swimlane.backlog {
+    background-color: #f9f9f9;
+  }
+  
+  .swimlane.in-progress {
+    background-color: #e5f7ff;
+  }
+  
+  .swimlane.complete {
+    background-color: #eaffea;
+  }
