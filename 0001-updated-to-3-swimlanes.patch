@@ -1,0 +1,155 @@
+From 44fc7eae8674c76da11da20f5f8a8b063f4dcc5a Mon Sep 17 00:00:00 2001
+From: Vaishnavi Kadam <vaishnavi.kadam413@gmail.com>
+Date: Mon, 14 Aug 2023 00:42:28 +0530
+Subject: [PATCH] updated to 3 swimlanes
+
+Signed-off-by: Vaishnavi Kadam <vaishnavi.kadam413@gmail.com>
+---
+ package.json |  4 +--
+ src/Board.js | 93 +++++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 90 insertions(+), 7 deletions(-)
+
+diff --git a/package.json b/package.json
+index e517e12..add136b 100644
+--- a/package.json
++++ b/package.json
+@@ -8,7 +8,7 @@
+   "private": true,
+   "dependencies": {
+     "bootstrap": "^4.2.1",
+-    "dragula": "^3.7.2",
++    "dragula": "^3.7.3",
+     "jquery": "^3.3.1",
+     "popper.js": "^1.14.7",
+     "react": "^16.7.0",
+@@ -16,7 +16,7 @@
+     "react-scripts": "2.1.3"
+   },
+   "scripts": {
+-    "start": "react-scripts start",
++    "start": "react-scripts --openssl-legacy-provide start",
+     "build": "react-scripts build",
+     "test": "react-scripts test",
+     "eject": "react-scripts eject"
+diff --git a/src/Board.js b/src/Board.js
+index 1f00045..10f9418 100644
+--- a/src/Board.js
++++ b/src/Board.js
+@@ -1,4 +1,4 @@
+-import React from 'react';
++import React, { Component } from 'react';
+ import Dragula from 'dragula';
+ import 'dragula/dist/dragula.css';
+ import Swimlane from './Swimlane';
+@@ -10,16 +10,22 @@ export default class Board extends React.Component {
+     const clients = this.getClients();
+     this.state = {
+       clients: {
+-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
+-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
+-        complete: clients.filter(client => client.status && client.status === 'complete'),
++        backlog: clients.filter(
++          (client) => !client.status || client.status === "backlog"
++        ),
++        inProgress: clients.filter(
++          (client) => client.status && client.status === "in-progress"
++        ),
++        complete: clients.filter(
++          (client) => client.status && client.status === "complete"
++        ),
+       }
+     }
+     this.swimlanes = {
+       backlog: React.createRef(),
+       inProgress: React.createRef(),
+       complete: React.createRef(),
+-    }
++    };
+   }
+   getClients() {
+     return [
+@@ -76,3 +82,80 @@ export default class Board extends React.Component {
+     );
+   }
+ }
++
++componentDidMount() {
++  this.drake = Dragula([
++    this.swimlanes.backlog.current,
++    this.swimlanes.inProgress.current,
++    this.swimlanes.complete.current,
++  ]);
++
++  this.drake.on("drop", (el, target, source, sibling) =>
++    this.updateClient(el, target, source, sibling)
++  );
++}
++
++componentWillUnmount() {
++  this.drake.remove();
++}
++
++/**
++ * Change the status of the client when a Card is moved
++ */
++updateClient(el, target, _, sibling) {
++  // Reverting DOM changes from Dragula
++  this.drake.cancel(true);
++
++  // Find out which swimlane the Card was moved to
++  let targetSwimlane = "backlog";
++  if (target === this.swimlanes.inProgress.current) {
++    targetSwimlane = "in-progress";
++  } else if (target === this.swimlanes.complete.current) {
++    targetSwimlane = "complete";
++  }
++
++  // Create a new clients array
++  const clientsList = [
++    ...this.state.clients.backlog,
++    ...this.state.clients.inProgress,
++    ...this.state.clients.complete,
++  ];
++
++  const clientThatMoved = clientsList.find(
++    (client) => client.id === el.dataset.id
++  );
++  const clientThatMovedClone = {
++    ...clientThatMoved,
++    status: targetSwimlane,
++  };
++
++  // Remove ClientThatMoved from the clientsList
++  const updatedClients = clientsList.filter(
++    (client) => client.id !== clientThatMovedClone.id
++  );
++
++  // Place ClientThatMoved just before the sibling client, keeping the order
++  const index = updatedClients.findIndex(
++    (client) => sibling && client.id === sibling.dataset.id
++  );
++  updatedClients.splice(
++    index === -1 ? updatedClients.length : index,
++    0,
++    clientThatMovedClone
++  );
++
++  // Update React state to reflect changes
++  this.setState({
++    clients: {
++      backlog: updatedClients.filter(
++        (client) => !client.status || client.status === "backlog"
++      ),
++      inProgress: updatedClients.filter(
++        (client) => client.status && client.status === "in-progress"
++      ),
++      complete: updatedClients.filter(
++        (client) => client.status && client.status === "complete"
++      ),
++    },
++  });
++}
+\ No newline at end of file
+-- 
+2.35.1.windows.2
+
