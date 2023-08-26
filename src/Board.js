@@ -26,12 +26,6 @@ export default class Board extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.clients !== prevState.clients) {
-      this.initializeDragula();
-    }
-  }
-
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
