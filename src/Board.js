@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 import Swimlane from './Swimlane';
 import './Board.css';
 
-export default class Board extends React.Component {
-  constructor(props) {
-    super(props);
+export default class Board extends Component {
+  state = {
+    clients: {
+      backlog: [],
+      inProgress: [],
+      complete: [],
+    },
+  };
+
+  componentDidMount() {
     const clients = this.getClients();
-    this.state = {
+    this.setState({
       clients: {
-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-        complete: clients.filter(client => client.status && client.status === 'complete'),
-      }
-    }
-    this.swimlanes = {
-      backlog: React.createRef(),
-      inProgress: React.createRef(),
-      complete: React.createRef(),
+        backlog: clients.filter(client => client.status === 'backlog'),
+        inProgress: clients.filter(client => client.status === 'in-progress'),
+        complete: clients.filter(client => client.status === 'complete'),
+      },
+    }, () => {
+      this.initializeDragula();
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.clients !== prevState.clients) {
+      this.initializeDragula();
     }
   }
+
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -50,25 +61,47 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
-  renderSwimlane(name, clients, ref) {
-    return (
-      <Swimlane name={name} clients={clients} dragulaRef={ref}/>
-    );
+
+  handleCardDrop = (clientID, newStatus) => {
+    const updatedClients = { ...this.state.clients };
+    const clientToUpdate = Object.values(updatedClients)
+      .flat()
+      .find(client => client.id === clientID);
+
+    if (clientToUpdate) {
+      clientToUpdate.status = newStatus;
+      this.setState({ clients: updatedClients });
+    }
+  };
+
+  initializeDragula() {
+    const swimlanes = ['backlog', 'inProgress', 'complete'];
+    swimlanes.forEach(swimlane => {
+      this[swimlane + 'Drake'] = Dragula([this[swimlane]], {
+        moves: (el, source, handle, sibling) => !el.classList.contains('no-drag'),
+      });
+      this[swimlane + 'Drake'].on('drop', (el, target, source) => {
+        const newStatus = target.dataset.status;
+        const clientID = el.dataset.id;
+        this.handleCardDrop(clientID, newStatus);
+      });
+    });
   }
 
   render() {
+    const { backlog, inProgress, complete } = this.state.clients;
     return (
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-4">
-              {this.renderSwimlane('Backlog', this.state.clients.backlog, this.swimlanes.backlog)}
+              <Swimlane name="Backlog" clients={backlog} onCardDrop={this.handleCardDrop} />
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane('In Progress', this.state.clients.inProgress, this.swimlanes.inProgress)}
+              <Swimlane name="In Progress" clients={inProgress} onCardDrop={this.handleCardDrop} />
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane('Complete', this.state.clients.complete, this.swimlanes.complete)}
+              <Swimlane name="Complete" clients={complete} onCardDrop={this.handleCardDrop} />
             </div>
           </div>
         </div>
@@ -76,3 +109,5 @@ export default class Board extends React.Component {
     );
   }
 }
+
+
