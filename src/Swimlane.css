@@ -2,6 +2,14 @@
   text-align: left;
   font-weight: bold;
   font-size: 18px;
+  transition: background-color 0.3s, color 0.3s, font-size 0.3s;
+  padding-left: 1rem;
+}
+
+.Swimlane-title:hover {
+  background-color: #000000;
+  color: #ffffff; 
+  font-size: 20px;
 }
 
 .Swimlane-dragColumn {
