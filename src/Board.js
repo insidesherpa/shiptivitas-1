@@ -21,6 +21,34 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     }
   }
+
+  componentDidMount() {
+    // Initialize Dragula for each swimlane
+    this.dragulaInstances =  Dragula([this.swimlanes.backlog.current,this.swimlanes.inProgress.current,this.swimlanes.complete.current]).on('drop', this.handleDrop);
+  }
+
+  handleDrop = (el, target) => {
+    // Handle drop event here
+    let trgStatus = target.querySelectorAll('.Card')[0].getAttribute('data-status')
+    const itemId = el.getAttribute('data-id');
+    //Shallow copy of clients
+    const updatedClients = { ...this.state.clients };
+    //Getting the reference of the client to be updated
+    const clientToUpdate = Object.values(updatedClients)
+                                  .flat()
+                                  .find(client => client.id === itemId);
+    //Updating the status of client to be updated
+    if(clientToUpdate){
+      clientToUpdate.status = trgStatus;
+      this.setState({ clients: updatedClients });
+    }
+  }
+
+  componentWillUnmount() {
+    // Destroy Dragula instances to prevent memory leaks
+    this.dragulaInstances.destroy();
+  }
+
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
