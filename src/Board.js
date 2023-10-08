@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line
 import Dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 import Swimlane from './Swimlane';
