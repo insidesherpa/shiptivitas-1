@@ -56,6 +56,24 @@ export default class Board extends React.Component {
     );
   }
 
+  componentDidMount() {
+
+    const drake = Dragula([
+      this.swimlanes.backlog.current,
+      this.swimlanes.inProgress.current,
+      this.swimlanes.complete.current,
+    ]);
+
+    drake.on('drop', (el, target, source, sibling) => {
+      const status = target.getAttribute('data-status');
+      const id = el.getAttribute('data-id');
+      const clients = this.state.clients;
+      const client = clients[status].find(client => client.id === id);
+      client.status = status;
+      this.setState({ clients });
+    });
+  }
+  
   render() {
     return (
       <div className="Board">
@@ -76,3 +94,4 @@ export default class Board extends React.Component {
     );
   }
 }
+
