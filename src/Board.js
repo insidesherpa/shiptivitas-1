@@ -21,6 +21,28 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     }
   }
+
+  componentDidMount() {
+    this.dragulaInstances =  Dragula([this.swimlanes.backlog.current,this.swimlanes.inProgress.current,this.swimlanes.complete.current]).on('drop', this.handleDrop);
+  }
+
+  handleDrop = (el, target) => {
+    let trgStatus = target.querySelectorAll('.Card')[0].getAttribute('data-status')
+    const itemId = el.getAttribute('data-id');
+    const updatedClients = { ...this.state.clients };
+    const clientToUpdate = Object.values(updatedClients)
+                                  .flat()
+                                  .find(client => client.id === itemId);
+    if(clientToUpdate){
+      clientToUpdate.status = trgStatus;
+      this.setState({ clients: updatedClients });
+    }
+  }
+
+  componentWillUnmount() {
+    this.dragulaInstances.destroy();
+  }
+
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
