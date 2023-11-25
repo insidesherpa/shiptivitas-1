@@ -4,7 +4,7 @@ import 'dragula/dist/dragula.css';
 import Swimlane from './Swimlane';
 import './Board.css';
 
-export default class Board extends React.Component {
+ export default class Board extends React.Component {
   constructor(props) {
     super(props);
     const clients = this.getClients();
@@ -21,6 +21,7 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     }
   }
+  
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -53,11 +54,41 @@ export default class Board extends React.Component {
   renderSwimlane(name, clients, ref) {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
-    );
-  }
-
-  render() {
-    return (
+      );
+    }
+    
+    
+    componentDidMount() {
+      const drake = Dragula([
+        this.swimlanes.backlog.current,
+        this.swimlanes.inProgress.current,
+        this.swimlanes.complete.current,
+      ]);
+    
+      drake.on('drop', (el, target, source, sibling) => {
+        const status = target.getAttribute('data-status');
+        const id = el.getAttribute('data-id');
+        const clients = this.state.clients;
+    
+        // Check if clients[status] is defined
+        if (clients[status]) {
+          const client = clients[status].find(client => client.id === id);
+    
+          // Check if client is found
+          if (client) {
+            client.status = status;
+            this.setState({ clients });
+          } else {
+            console.error(`Client with ID ${id} not found in status ${status}`);
+          }
+        } else {
+          console.error(`Status ${status} not found in clients`);
+        }
+      });
+    }
+    
+    render() {
+      return (
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
