@@ -7,21 +7,22 @@ export default class Swimlane extends React.Component {
     const cards = this.props.clients.map(client => {
       return (
         <Card
-          key={client.id}
+          key={client.id}  
           id={client.id}
           name={client.name}
           description={client.description}
           status={client.status}
         />
       );
-    })
+    });
+
     return (
       <div className="Swimlane-column">
         <div className="Swimlane-title">{this.props.name}</div>
-        <div className="Swimlane-dragColumn" ref={this.props.dragulaRef}>
+        <div className="Swimlane-dragColumn" data-status={this.props.status} ref={this.props.dragulaRef}>
           {cards}
         </div>
-      </div>);
+      </div>
+    );
   }
-
 }
