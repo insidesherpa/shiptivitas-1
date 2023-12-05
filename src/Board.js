@@ -145,7 +145,7 @@ const Board = () => {
     console.log(containers);
 
     const drake = Dragula(containers);
-    drake.on("drop", function (el, target, source, sibling) {
+    drake.on("drop", function (el, target) {
       console.log(el);
       console.log(target);
       let currentStatus = el.getAttribute("data-status");
