@@ -1,31 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import Card from './Card';
-import './Swimlane.css';
+import React, { useEffect, useState } from "react";
+import Card from "./Card";
+import "./Swimlane.css";
 
 const Swimlane = ({ name, clients, dragulaRef }) => {
+  const [data, setData] = useState("");
 
-  const [data, setData] = useState('');
-
-  // Function to set the data-status of swimlane
-  const getName = (name) => {
+  const getStatus = (name) => {
     switch (name) {
-      case 'Backlog':
-        return "backlog"
-      case 'In Progress':
-        return "in-progress"
-      case 'Complete':
-        return "complete"
+      case "Backlog":
+        return "backlog";
+      case "In Progress":
+        return "in-progress";
+      case "Complete":
+        return "complete";
       default:
-        return '';
+        return "";
     }
   };
+  console.log("name", name);
 
   useEffect(() => {
-    setData(getName(name));
-  }, [dragulaRef])
+    setData(getStatus(name));
+  }, [dragulaRef]);
 
-
-  const cards = clients.map(client => (
+  const cards = clients.map((client) => (
     <Card
       key={client.id}
       id={client.id}
@@ -34,8 +32,6 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
       status={data}
     />
   ));
-
-
 
   return (
     <div className="Swimlane-column">
