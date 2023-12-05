@@ -1,28 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import './Swimlane.css';
 
-export default class Swimlane extends React.Component {
-  render() {
-    const cards = this.props.clients.map(client => {
-      return (
-        <Card
-          key={client.id}  
-          id={client.id}
-          name={client.name}
-          description={client.description}
-          status={client.status}
-        />
-      );
-    });
+const Swimlane = ({ name, clients, dragulaRef }) => {
 
-    return (
-      <div className="Swimlane-column">
-        <div className="Swimlane-title">{this.props.name}</div>
-        <div className="Swimlane-dragColumn" data-status={this.props.status} ref={this.props.dragulaRef}>
-          {cards}
-        </div>
+  const [data, setData] = useState('');
+
+  // Function to set the data-status of swimlane
+  const getName = (name) => {
+    switch (name) {
+      case 'Backlog':
+        return "backlog"
+      case 'In Progress':
+        return "in-progress"
+      case 'Complete':
+        return "complete"
+      default:
+        return '';
+    }
+  };
+
+  useEffect(() => {
+    setData(getName(name));
+  }, [dragulaRef])
+
+
+  const cards = clients.map(client => (
+    <Card
+      key={client.id}
+      id={client.id}
+      name={client.name}
+      description={client.description}
+      status={data}
+    />
+  ));
+
+
+
+  return (
+    <div className="Swimlane-column">
+      <div className="Swimlane-title">{name}</div>
+      <div className="Swimlane-dragColumn" ref={dragulaRef} data-status={data}>
+        {cards}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default Swimlane;
