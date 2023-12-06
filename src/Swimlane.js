@@ -17,7 +17,7 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
         return "";
     }
   };
-  console.log("name", name);
+  console.log("Status", name);
 
   useEffect(() => {
     setData(getStatus(name));
@@ -44,3 +44,31 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
 };
 
 export default Swimlane;
+
+
+//I have tried the class component for all but it doesn't work for me! 
+
+// export default class Swimlane extends React.Component {
+//   render() {
+//     const cards = this.props.clients.map(client => {
+//       return (
+//         <Card
+//           key={client.id}  
+//           id={client.id}
+//           name={client.name}
+//           description={client.description}
+//           status={client.status}
+//         />
+//       );
+//     });
+
+//     return (
+//       <div className="Swimlane-column">
+//         <div className="Swimlane-title">{this.props.name}</div>
+//         <div className="Swimlane-dragColumn" data-status={this.props.status} ref={this.props.dragulaRef}>
+//           {cards}
+//         </div>
+//       </div>
+//     );
+//   }
+// }

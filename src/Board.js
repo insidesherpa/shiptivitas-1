@@ -141,21 +141,25 @@ const Board = () => {
       // complete: clientData.filter(client => client.status && client.status === 'complete'),
       complete: [],
     });
+    
     const containers = Object.values(swimlanes).map((ref) => ref.current);
-    console.log(containers);
+    console.log("Containers",containers);
 
     const drake = Dragula(containers);
     drake.on("drop", function (el, target) {
-      console.log(el);
-      console.log(target);
+      console.log("Element: ",el);
+      console.log("Target: ",target);
+
       let currentStatus = el.getAttribute("data-status");
+      console.log("CurrentStatus: " + currentStatus);
+      
       let targetStatus = target.getAttribute("data-status");
+      console.log("TargetStatus: " + targetStatus);
       el.classList.remove(getClassName(currentStatus));
+      
       if (currentStatus !== targetStatus) {
         currentStatus = targetStatus;
         el.setAttribute("data-status", currentStatus);
-        console.log(currentStatus, " Current");
-        console.log(targetStatus, " Target");
         el.classList.add(getClassName(targetStatus));
       } else {
         el.classList.add(getClassName(currentStatus));
@@ -169,7 +173,7 @@ const Board = () => {
     };
   }, []);
 
-  // I have Tried class component, the below code but it seems duplicating the cards
+  // I have Tried this tooo!! => class component, the below code but it seems duplicating the cards 
 
   //   componentDidMount() {
   //     const drake = Dragula([

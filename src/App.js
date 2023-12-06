@@ -5,6 +5,8 @@ import Navigation from './Navigation';
 import Board from './Board';
 import './App.css';
 
+// Changed all the components into functional component!!
+// React State plays main role with the dragula Library
 function App() {
   const [selectedTab, setSelectedTab] = useState('home');
 
