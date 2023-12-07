@@ -27,7 +27,7 @@ function App() {
     );
   };
 
-  const renderTabContent = () => {
+  const renderHomeTabContent = () => {
     switch (selectedTab) {
       case 'home':
       default:
@@ -41,7 +41,7 @@ function App() {
     <div className="App">
       {renderNavigation()}
 
-      <div className="App-body">{renderTabContent()}</div>
+      <div className="App-body">{renderHomeTabContent()}</div>
     </div>
   );
 }
