@@ -1,0 +1,25 @@
+From 25b8704116e596701459e12330c106a74d3de4f7 Mon Sep 17 00:00:00 2001
+From: gangeswaran <gangeswaran375@gmail.com>
+Date: Tue, 5 Dec 2023 11:09:23 +0530
+Subject: [PATCH 3/7] All functionality completed successfully(drag and drop)
+
+---
+ src/Board.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Board.js b/src/Board.js
+index 5a8e6f5..5496d01 100644
+--- a/src/Board.js
++++ b/src/Board.js
+@@ -145,7 +145,7 @@ const Board = () => {
+     console.log(containers);
+ 
+     const drake = Dragula(containers);
+-    drake.on("drop", function (el, target, source, sibling) {
++    drake.on("drop", function (el, target) {
+       console.log(el);
+       console.log(target);
+       let currentStatus = el.getAttribute("data-status");
+-- 
+2.42.0.windows.2
+

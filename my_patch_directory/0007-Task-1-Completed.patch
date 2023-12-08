@@ -1,0 +1,46 @@
+From a6c0131d90f460771f7dc585d7a786b291318221 Mon Sep 17 00:00:00 2001
+From: gangeswaran <gangeswaran375@gmail.com>
+Date: Thu, 7 Dec 2023 11:50:11 +0530
+Subject: [PATCH 7/7] Task 1 Completed
+
+---
+ src/App.js        | 4 ++--
+ src/Navigation.js | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/App.js b/src/App.js
+index 3527dbd..cddcc94 100755
+--- a/src/App.js
++++ b/src/App.js
+@@ -27,7 +27,7 @@ function App() {
+     );
+   };
+ 
+-  const renderTabContent = () => {
++  const renderHomeTabContent = () => {
+     switch (selectedTab) {
+       case 'home':
+       default:
+@@ -41,7 +41,7 @@ function App() {
+     <div className="App">
+       {renderNavigation()}
+ 
+-      <div className="App-body">{renderTabContent()}</div>
++      <div className="App-body">{renderHomeTabContent()}</div>
+     </div>
+   );
+ }
+diff --git a/src/Navigation.js b/src/Navigation.js
+index 546f035..a625a5f 100644
+--- a/src/Navigation.js
++++ b/src/Navigation.js
+@@ -61,4 +61,4 @@ export default Navigation;
+ //       </ul>
+ //     );
+ //   }
+-// }
+\ No newline at end of file
++// }
+-- 
+2.42.0.windows.2
+
