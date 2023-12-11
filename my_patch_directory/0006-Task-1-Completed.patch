@@ -1,0 +1,202 @@
+From 3e136e4b322dfaec87e8feaf0e23ee7d37616d53 Mon Sep 17 00:00:00 2001
+From: gangeswaran <gangeswaran375@gmail.com>
+Date: Wed, 6 Dec 2023 09:16:45 +0530
+Subject: [PATCH 6/7] Task 1 Completed
+
+---
+ src/App.js        |  2 ++
+ src/Board.js      | 16 ++++++++++------
+ src/Card.js       | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ src/Navigation.js | 21 +++++++++++++++++++++
+ src/Swimlane.js   | 30 +++++++++++++++++++++++++++++-
+ 5 files changed, 106 insertions(+), 7 deletions(-)
+
+diff --git a/src/App.js b/src/App.js
+index f75d283..3527dbd 100755
+--- a/src/App.js
++++ b/src/App.js
+@@ -5,6 +5,8 @@ import Navigation from './Navigation';
+ import Board from './Board';
+ import './App.css';
+ 
++// Changed all the components into functional component!!
++// React State plays main role with the dragula Library
+ function App() {
+   const [selectedTab, setSelectedTab] = useState('home');
+ 
+diff --git a/src/Board.js b/src/Board.js
+index 5496d01..3305f2e 100644
+--- a/src/Board.js
++++ b/src/Board.js
+@@ -141,21 +141,25 @@ const Board = () => {
+       // complete: clientData.filter(client => client.status && client.status === 'complete'),
+       complete: [],
+     });
++    
+     const containers = Object.values(swimlanes).map((ref) => ref.current);
+-    console.log(containers);
++    console.log("Containers",containers);
+ 
+     const drake = Dragula(containers);
+     drake.on("drop", function (el, target) {
+-      console.log(el);
+-      console.log(target);
++      console.log("Element: ",el);
++      console.log("Target: ",target);
++
+       let currentStatus = el.getAttribute("data-status");
++      console.log("CurrentStatus: " + currentStatus);
++      
+       let targetStatus = target.getAttribute("data-status");
++      console.log("TargetStatus: " + targetStatus);
+       el.classList.remove(getClassName(currentStatus));
++      
+       if (currentStatus !== targetStatus) {
+         currentStatus = targetStatus;
+         el.setAttribute("data-status", currentStatus);
+-        console.log(currentStatus, " Current");
+-        console.log(targetStatus, " Target");
+         el.classList.add(getClassName(targetStatus));
+       } else {
+         el.classList.add(getClassName(currentStatus));
+@@ -169,7 +173,7 @@ const Board = () => {
+     };
+   }, []);
+ 
+-  // I have Tried class component, the below code but it seems duplicating the cards
++  // I have Tried this tooo!! => class component, the below code but it seems duplicating the cards 
+ 
+   //   componentDidMount() {
+   //     const drake = Dragula([
+diff --git a/src/Card.js b/src/Card.js
+index b9fbae9..4be823f 100644
+--- a/src/Card.js
++++ b/src/Card.js
+@@ -27,3 +27,47 @@ function Card(props) {
+ }
+ 
+ export default Card;
++
++
++// I have tried this tooo with class components
++
++// class Card extends Component {
++//   constructor(props) {
++//     super(props);
++//     this.state = {
++//       className: ''
++//     };
++//   }
++  
++// componentDidMount(){
++    
++//   this.setState({ className: this.getColorClass(this.props.status) });
++// }
++
++
++// componentDidUpdate(prevProps) {
++
++
++//   if (this.props.status !== prevProps.status) {
++//     const newClassName = this.getColorClass(this.props.status);
++//     console.log('Previous Status:', prevProps.status);
++//     console.log('New Status:', this.props.status);
++//     console.log('New Class:', newClassName);
++
++//     this.setState({ className: newClassName });
++//   }
++// }
++
++
++
++// getColorClass(status) {
++//   let className = ['Card'];
++//   if (status === 'backlog') {
++//     className.push('Card-grey');
++//   } else if (status === 'in-progress') {
++//     className.push('Card-blue');
++//   } else if (status === 'complete') {
++//     className.push('Card-green');
++//   }
++//   return className.join(' ');
++// }
+\ No newline at end of file
+diff --git a/src/Navigation.js b/src/Navigation.js
+index 5eff0aa..546f035 100644
+--- a/src/Navigation.js
++++ b/src/Navigation.js
+@@ -41,3 +41,24 @@ function Navigation(props) {
+ }
+ 
+ export default Navigation;
++
++// Changed the class component to functional component
++
++// import React from 'react';
++
++// export default class Navigation extends React.Component {
++//   render() {
++//     return (
++//       <ul className="nav nav-tabs" id="myTab" role="tablist">
++//         <li className="nav-item">
++//           <a className={"nav-link " + (this.props.selectedTab === 'home' ? 'active': '')} onClick={() => this.props.onClick("home")}
++//             id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected={this.props.selectedTab === 'home'}>Home</a>
++//         </li>
++//         <li className="nav-item">
++//           <a className={"nav-link " + (this.props.selectedTab === 'shipping-requests' ? 'active': '')} onClick={() => this.props.onClick("shipping-requests")}
++//           id="shipping-requests-tab" data-toggle="tab" href="#shipping-requests" role="tab" aria-controls="shipping-requests" aria-selected={this.props.selectedTab === 'shipping-requests'}>Shipping Requests</a>
++//         </li>
++//       </ul>
++//     );
++//   }
++// }
+\ No newline at end of file
+diff --git a/src/Swimlane.js b/src/Swimlane.js
+index da8b350..bea1499 100644
+--- a/src/Swimlane.js
++++ b/src/Swimlane.js
+@@ -17,7 +17,7 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
+         return "";
+     }
+   };
+-  console.log("name", name);
++  console.log("Status", name);
+ 
+   useEffect(() => {
+     setData(getStatus(name));
+@@ -44,3 +44,31 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
+ };
+ 
+ export default Swimlane;
++
++
++//I have tried the class component for all but it doesn't work for me! 
++
++// export default class Swimlane extends React.Component {
++//   render() {
++//     const cards = this.props.clients.map(client => {
++//       return (
++//         <Card
++//           key={client.id}  
++//           id={client.id}
++//           name={client.name}
++//           description={client.description}
++//           status={client.status}
++//         />
++//       );
++//     });
++
++//     return (
++//       <div className="Swimlane-column">
++//         <div className="Swimlane-title">{this.props.name}</div>
++//         <div className="Swimlane-dragColumn" data-status={this.props.status} ref={this.props.dragulaRef}>
++//           {cards}
++//         </div>
++//       </div>
++//     );
++//   }
++// }
+\ No newline at end of file
+-- 
+2.42.0.windows.2
+

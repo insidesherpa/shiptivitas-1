@@ -1,0 +1,553 @@
+From 68851ba82ee7989816fbdcc112b5d173b2c4c199 Mon Sep 17 00:00:00 2001
+From: gangeswaran <gangeswaran375@gmail.com>
+Date: Tue, 5 Dec 2023 11:08:27 +0530
+Subject: [PATCH 2/7] commit
+
+---
+ src/Board.js      | 274 ++++++++++++++++++++++++++++++++++++----------
+ src/Card.js       |  29 ++---
+ src/HomeTab.js    |   8 +-
+ src/Navigation.js |  17 ++-
+ src/Swimlane.js   |  38 +++----
+ 5 files changed, 265 insertions(+), 101 deletions(-)
+
+diff --git a/src/Board.js b/src/Board.js
+index 94978c0..5a8e6f5 100644
+--- a/src/Board.js
++++ b/src/Board.js
+@@ -1,11 +1,10 @@
+-import React, { useState, useRef, useEffect } from 'react';
+-import Dragula from 'dragula';
+-import 'dragula/dist/dragula.css';
+-import Swimlane from './Swimlane';
+-import './Board.css';
++import React, { useState, useRef, useEffect } from "react";
++import Dragula from "dragula";
++import "dragula/dist/dragula.css";
++import Swimlane from "./Swimlane";
++import "./Board.css";
+ 
+ const Board = () => {
+-
+   const swimlanes = {
+     backlog: useRef(),
+     inProgress: useRef(),
+@@ -14,27 +13,97 @@ const Board = () => {
+ 
+   const getClients = () => {
+     return [
+-      ['1', 'Stark, White and Abbott', 'Cloned Optimal Architecture', 'in-progress'],
+-      ['2', 'Wiza LLC', 'Exclusive Bandwidth-Monitored Implementation', 'complete'],
+-      ['3', 'Nolan LLC', 'Vision-Oriented 4Thgeneration Graphicaluserinterface', 'backlog'],
+-      ['4', 'Thompson PLC', 'Streamlined Regional Knowledgeuser', 'in-progress'],
+-      ['5', 'Walker-Williamson', 'Team-Oriented 6Thgeneration Matrix', 'in-progress'],
+-      ['6', 'Boehm and Sons', 'Automated Systematic Paradigm', 'backlog'],
+-      ['7', 'Runolfsson, Hegmann and Block', 'Integrated Transitional Strategy', 'backlog'],
+-      ['8', 'Schumm-Labadie', 'Operative Heuristic Challenge', 'backlog'],
+-      ['9', 'Kohler Group', 'Re-Contextualized Multi-Tasking Attitude', 'backlog'],
+-      ['10', 'Romaguera Inc', 'Managed Foreground Toolset', 'backlog'],
+-      ['11', 'Reilly-King', 'Future-Proofed Interactive Toolset', 'complete'],
+-      ['12', 'Emard, Champlin and Runolfsdottir', 'Devolved Needs-Based Capability', 'backlog'],
+-      ['13', 'Fritsch, Cronin and Wolff', 'Open-Source 3Rdgeneration Website', 'complete'],
+-      ['14', 'Borer LLC', 'Profit-Focused Incremental Orchestration', 'backlog'],
+-      ['15', 'Emmerich-Ankunding', 'User-Centric Stable Extranet', 'in-progress'],
+-      ['16', 'Willms-Abbott', 'Progressive Bandwidth-Monitored Access', 'in-progress'],
+-      ['17', 'Brekke PLC', 'Intuitive User-Facing Customerloyalty', 'complete'],
+-      ['18', 'Bins, Toy and Klocko', 'Integrated Assymetric Software', 'backlog'],
+-      ['19', 'Hodkiewicz-Hayes', 'Programmable Systematic Securedline', 'backlog'],
+-      ['20', 'Murphy, Lang and Ferry', 'Organized Explicit Access', 'backlog'],
+-    ].map(companyDetails => ({
++      [
++        "1",
++        "Stark, White and Abbott",
++        "Cloned Optimal Architecture",
++        "in-progress",
++      ],
++      [
++        "2",
++        "Wiza LLC",
++        "Exclusive Bandwidth-Monitored Implementation",
++        "complete",
++      ],
++      [
++        "3",
++        "Nolan LLC",
++        "Vision-Oriented 4Thgeneration Graphicaluserinterface",
++        "backlog",
++      ],
++      [
++        "4",
++        "Thompson PLC",
++        "Streamlined Regional Knowledgeuser",
++        "in-progress",
++      ],
++      [
++        "5",
++        "Walker-Williamson",
++        "Team-Oriented 6Thgeneration Matrix",
++        "in-progress",
++      ],
++      ["6", "Boehm and Sons", "Automated Systematic Paradigm", "backlog"],
++      [
++        "7",
++        "Runolfsson, Hegmann and Block",
++        "Integrated Transitional Strategy",
++        "backlog",
++      ],
++      ["8", "Schumm-Labadie", "Operative Heuristic Challenge", "backlog"],
++      [
++        "9",
++        "Kohler Group",
++        "Re-Contextualized Multi-Tasking Attitude",
++        "backlog",
++      ],
++      ["10", "Romaguera Inc", "Managed Foreground Toolset", "backlog"],
++      ["11", "Reilly-King", "Future-Proofed Interactive Toolset", "complete"],
++      [
++        "12",
++        "Emard, Champlin and Runolfsdottir",
++        "Devolved Needs-Based Capability",
++        "backlog",
++      ],
++      [
++        "13",
++        "Fritsch, Cronin and Wolff",
++        "Open-Source 3Rdgeneration Website",
++        "complete",
++      ],
++      [
++        "14",
++        "Borer LLC",
++        "Profit-Focused Incremental Orchestration",
++        "backlog",
++      ],
++      [
++        "15",
++        "Emmerich-Ankunding",
++        "User-Centric Stable Extranet",
++        "in-progress",
++      ],
++      [
++        "16",
++        "Willms-Abbott",
++        "Progressive Bandwidth-Monitored Access",
++        "in-progress",
++      ],
++      ["17", "Brekke PLC", "Intuitive User-Facing Customerloyalty", "complete"],
++      [
++        "18",
++        "Bins, Toy and Klocko",
++        "Integrated Assymetric Software",
++        "backlog",
++      ],
++      [
++        "19",
++        "Hodkiewicz-Hayes",
++        "Programmable Systematic Securedline",
++        "backlog",
++      ],
++      ["20", "Murphy, Lang and Ferry", "Organized Explicit Access", "backlog"],
++    ].map((companyDetails) => ({
+       id: companyDetails[0],
+       name: companyDetails[1],
+       description: companyDetails[2],
+@@ -50,47 +119,45 @@ const Board = () => {
+ 
+   const getClassName = (status) => {
+     switch (status) {
+-      case 'backlog':
+-        return 'Card-grey';
+-      case 'in-progress':
+-        return 'Card-blue';
+-      case 'complete':
+-        return 'Card-green';
++      case "backlog":
++        return "Card-grey";
++      case "in-progress":
++        return "Card-blue";
++      case "complete":
++        return "Card-green";
+       default:
+-        return 'Card';
++        return "Card";
+     }
+   };
+ 
+-
+   useEffect(() => {
+     const clientData = getClients();
+     setClients({
+       backlog: clientData,
++
+       // inProgress: clientData.filter(client => client.status && client.status === 'in-progress'),
+       inProgress: [],
++
+       // complete: clientData.filter(client => client.status && client.status === 'complete'),
+       complete: [],
+     });
+-    // Our containers which will hold cards aka Swimlanes
+-    const containers = Object.values(swimlanes).map(ref => ref.current);
+-    // console.log(containers);
+-    // Initialized Dragula after rendering
++    const containers = Object.values(swimlanes).map((ref) => ref.current);
++    console.log(containers);
++
+     const drake = Dragula(containers);
+-    // Event listener to update card's class when it's dropped
+-    drake.on('drop', function (el, target, source, sibling) {
+-      // console.log(el);
+-      // console.log(target);
+-      let currentStatus = el.getAttribute('data-status');
+-      let targetStatus = target.getAttribute('data-status');
++    drake.on("drop", function (el, target, source, sibling) {
++      console.log(el);
++      console.log(target);
++      let currentStatus = el.getAttribute("data-status");
++      let targetStatus = target.getAttribute("data-status");
+       el.classList.remove(getClassName(currentStatus));
+       if (currentStatus !== targetStatus) {
+         currentStatus = targetStatus;
+-        el.setAttribute('data-status', currentStatus);
+-        // console.log(currentStatus, " Current"); 
+-        // console.log(targetStatus, " Target");
+-        el.classList.add(getClassName(targetStatus))
+-      }
+-      else {
++        el.setAttribute("data-status", currentStatus);
++        console.log(currentStatus, " Current");
++        console.log(targetStatus, " Target");
++        el.classList.add(getClassName(targetStatus));
++      } else {
+         el.classList.add(getClassName(currentStatus));
+       }
+ 
+@@ -98,11 +165,102 @@ const Board = () => {
+     });
+ 
+     return () => {
+-      // Removing any event listeners when component unmounts
+       drake.destroy();
+     };
+   }, []);
+ 
++  // I have Tried class component, the below code but it seems duplicating the cards
++
++  //   componentDidMount() {
++  //     const drake = Dragula([
++  //       this.swimlanes.inProgress.current,
++  //         this.swimlanes.backlog.current,
++  //         this.swimlanes.complete.current,
++  //     ]);
++
++  //     drake.on("drop", (el, target, source) => {
++
++  //         const taskId = el.getAttribute('data-id');
++  //         const currentStatusHTML = source.innerHTML;
++  //         const newStatusHTML = target.innerHTML;
++
++  //         const parser = new DOMParser();
++  //         const doc1 = parser.parseFromString(currentStatusHTML, "text/html");
++  //         const outerDiv = doc1.querySelector(".Card");
++  //         let dataStatusValue = "";
++  //         if (outerDiv) {
++  //             dataStatusValue = outerDiv.getAttribute("data-status") || "nil";
++  //             console.log("new console :" , dataStatusValue)
++  //         }
++  //         const doc2 = parser.parseFromString(newStatusHTML, "text/html");
++  //         const newOuterDiv = doc2.querySelector(".Card");
++  //         let newDataStatusValue = "";
++  //         if (newOuterDiv) {
++  //             newDataStatusValue = newOuterDiv.getAttribute("data-status") || "nil";
++  //         }
++  //         console.log(dataStatusValue, newDataStatusValue);
++  //         this.updateCardStatus(taskId, dataStatusValue, newDataStatusValue);
++
++  //       });
++  // }
++  // componentWillUnmount(){
++  //   this.drake.remove();
++  // }
++
++  // updateCardStatus = (taskId, currentStatus, newStatus) => {
++  //   console.log(`Moving card ${taskId} from ${currentStatus} to ${newStatus}`);
++  //   this.setState((prevState) => {
++  //     const updatedClients = { ...prevState.clients };
++  //     const card = this.findCard(taskId, updatedClients);
++  //     if (card) {
++  //       // Log the original card data for debugging
++  //       console.log('Original Card:', card);
++
++  //       // Update the status of the card
++  //       card.status = newStatus;
++
++  //       // Initialize the newStatus key if it doesn't exist
++  //       if (!updatedClients[newStatus]) {
++  //         updatedClients[newStatus] = [];
++  //       }
++
++  //       // Log the state before modification for debugging
++  //       console.log('Before state update:', updatedClients);
++
++  //       // Remove the card from the currentStatus array
++  //       if (updatedClients[currentStatus]) {
++  //         updatedClients[currentStatus] = updatedClients[currentStatus].filter((c) => c.id !== taskId);
++  //       }
++
++  //       // Log the state after removing the card for debugging
++  //       console.log('After removal:', updatedClients);
++
++  //       // Check if the card already exists in the newStatus array
++  //       const isCardInNewStatus = updatedClients[newStatus].some((c) => c.id === taskId);
++
++  //       if (!isCardInNewStatus) {
++  //         // Push the card to the newStatus array only if it doesn't exist
++  //         updatedClients[newStatus].push(card);
++  //         console.log("Card already: ", newStatus, card)
++  //       }
++
++  //       // Log the final state after updating for debugging
++  //       console.log('After state update:', updatedClients);
++  //     }
++
++  //     return { clients: updatedClients };
++  //   });
++  // };
++
++  //   findCard = (taskId, clients) => {
++  //     for (const status in clients) {
++  //       const foundCard = clients[status].find(card => String(card.id) === String(taskId));
++  //       if (foundCard) {
++  //         return foundCard;
++  //       }
++  //     }
++  //     return null;
++  //   };
+ 
+   const renderSwimlane = (name, clients, ref) => {
+     return <Swimlane name={name} clients={clients} dragulaRef={ref} />;
+@@ -113,13 +271,17 @@ const Board = () => {
+       <div className="container-fluid">
+         <div className="row">
+           <div className="col-md-4">
+-            {renderSwimlane('Backlog', clients.backlog, swimlanes.backlog)}
++            {renderSwimlane("Backlog", clients.backlog, swimlanes.backlog)}
+           </div>
+           <div className="col-md-4">
+-            {renderSwimlane('In Progress', clients.inProgress, swimlanes.inProgress)}
++            {renderSwimlane(
++              "In Progress",
++              clients.inProgress,
++              swimlanes.inProgress
++            )}
+           </div>
+           <div className="col-md-4">
+-            {renderSwimlane('Complete', clients.complete, swimlanes.complete)}
++            {renderSwimlane("Complete", clients.complete, swimlanes.complete)}
+           </div>
+         </div>
+       </div>
+@@ -127,4 +289,4 @@ const Board = () => {
+   );
+ };
+ 
+-export default Board;
+\ No newline at end of file
++export default Board;
+diff --git a/src/Card.js b/src/Card.js
+index db64026..b9fbae9 100644
+--- a/src/Card.js
++++ b/src/Card.js
+@@ -1,26 +1,29 @@
+-import React from 'react';
+-import './Card.css';
++import React from "react";
++import "./Card.css";
+ 
+ function Card(props) {
+-
+   const getStatusClassName = (status) => {
+     switch (status) {
+-      case 'backlog':
+-        return 'Card-grey';
+-      case 'in-progress':
+-        return 'Card-blue';
+-      case 'complete':
+-        return 'Card-green';
++      case "backlog":
++        return "Card-grey";
++      case "in-progress":
++        return "Card-blue";
++      case "complete":
++        return "Card-green";
+       default:
+-        return '';
++        return "";
+     }
+   };
+-  
++
+   return (
+-    <div className={`Card ${getStatusClassName(props.status)}`} data-id={props.id} data-status={props.status}>
++    <div
++      className={`Card ${getStatusClassName(props.status)}`}
++      data-id={props.id}
++      data-status={props.status}
++    >
+       <div className="Card-title">{props.name}</div>
+     </div>
+   );
+ }
+ 
+-export default Card;
+\ No newline at end of file
++export default Card;
+diff --git a/src/HomeTab.js b/src/HomeTab.js
+index 24543da..2617483 100644
+--- a/src/HomeTab.js
++++ b/src/HomeTab.js
+@@ -1,16 +1,14 @@
+-import React from 'react';
++import React from "react";
+ 
+ export default function HomeTab() {
+   return (
+     <header className="App-header">
+       <div className="App-title">
+-        <h1>
+-          SHIPTIVITAS
+-        </h1>
++        <h1>SHIPTIVITAS</h1>
+         <div className="App-icon">
+           <div className="Circle"></div>
+         </div>
+       </div>
+     </header>
+   );
+-}
+\ No newline at end of file
++}
+diff --git a/src/Navigation.js b/src/Navigation.js
+index 04e91e0..5eff0aa 100644
+--- a/src/Navigation.js
++++ b/src/Navigation.js
+@@ -1,32 +1,37 @@
+-import React from 'react';
++import React from "react";
+ 
+ function Navigation(props) {
+   return (
+     <ul className="nav nav-tabs" id="myTab" role="tablist">
+       <li className="nav-item">
+         <a
+-          className={"nav-link " + (props.selectedTab === 'home' ? 'active' : '')}
++          className={
++            "nav-link " + (props.selectedTab === "home" ? "active" : "")
++          }
+           onClick={() => props.onClick("home")}
+           id="home-tab"
+           data-toggle="tab"
+           href="#home"
+           role="tab"
+           aria-controls="home"
+-          aria-selected={props.selectedTab === 'home'}
++          aria-selected={props.selectedTab === "home"}
+         >
+           Home
+         </a>
+       </li>
+       <li className="nav-item">
+         <a
+-          className={"nav-link " + (props.selectedTab === 'shipping-requests' ? 'active' : '')}
++          className={
++            "nav-link " +
++            (props.selectedTab === "shipping-requests" ? "active" : "")
++          }
+           onClick={() => props.onClick("shipping-requests")}
+           id="shipping-requests-tab"
+           data-toggle="tab"
+           href="#shipping-requests"
+           role="tab"
+           aria-controls="shipping-requests"
+-          aria-selected={props.selectedTab === 'shipping-requests'}
++          aria-selected={props.selectedTab === "shipping-requests"}
+         >
+           Shipping Requests
+         </a>
+@@ -35,4 +40,4 @@ function Navigation(props) {
+   );
+ }
+ 
+-export default Navigation;
+\ No newline at end of file
++export default Navigation;
+diff --git a/src/Swimlane.js b/src/Swimlane.js
+index 1ed9020..da8b350 100644
+--- a/src/Swimlane.js
++++ b/src/Swimlane.js
+@@ -1,31 +1,29 @@
+-import React, { useEffect, useState } from 'react';
+-import Card from './Card';
+-import './Swimlane.css';
++import React, { useEffect, useState } from "react";
++import Card from "./Card";
++import "./Swimlane.css";
+ 
+ const Swimlane = ({ name, clients, dragulaRef }) => {
++  const [data, setData] = useState("");
+ 
+-  const [data, setData] = useState('');
+-
+-  // Function to set the data-status of swimlane
+-  const getName = (name) => {
++  const getStatus = (name) => {
+     switch (name) {
+-      case 'Backlog':
+-        return "backlog"
+-      case 'In Progress':
+-        return "in-progress"
+-      case 'Complete':
+-        return "complete"
++      case "Backlog":
++        return "backlog";
++      case "In Progress":
++        return "in-progress";
++      case "Complete":
++        return "complete";
+       default:
+-        return '';
++        return "";
+     }
+   };
++  console.log("name", name);
+ 
+   useEffect(() => {
+-    setData(getName(name));
+-  }, [dragulaRef])
+-
++    setData(getStatus(name));
++  }, [dragulaRef]);
+ 
+-  const cards = clients.map(client => (
++  const cards = clients.map((client) => (
+     <Card
+       key={client.id}
+       id={client.id}
+@@ -35,8 +33,6 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
+     />
+   ));
+ 
+-
+-
+   return (
+     <div className="Swimlane-column">
+       <div className="Swimlane-title">{name}</div>
+@@ -47,4 +43,4 @@ const Swimlane = ({ name, clients, dragulaRef }) => {
+   );
+ };
+ 
+-export default Swimlane;
+\ No newline at end of file
++export default Swimlane;
+-- 
+2.42.0.windows.2
+
