@@ -1,20 +1,29 @@
-import React from 'react';
-import './Card.css';
+import React from "react";
+import "./Card.css";
 
-export default class Card extends React.Component {
-  render() {
-    let className = ['Card'];
-    if (this.props.status === 'backlog') {
-      className.push('Card-grey');
-    } else if (this.props.status === 'in-progress') {
-      className.push('Card-blue');
-    } else if (this.props.status === 'complete') {
-      className.push('Card-green');
+function Card(props) {
+  const getStatusClassName = (status) => {
+    switch (status) {
+      case "backlog":
+        return "Card-grey";
+      case "in-progress":
+        return "Card-blue";
+      case "complete":
+        return "Card-green";
+      default:
+        return "";
     }
-    return (
-      <div className={className.join(' ')} data-id={this.props.id} data-status={this.props.status}>
-        <div className="Card-title">{this.props.name}</div>
-      </div>
-    );
-  }
+  };
+
+  return (
+    <div
+      className={`Card ${getStatusClassName(props.status)}`}
+      data-id={props.id}
+      data-status={props.status}
+    >
+      <div className="Card-title">{props.name}</div>
+    </div>
+  );
 }
+
+export default Card;
