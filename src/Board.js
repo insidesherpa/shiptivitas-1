@@ -1,72 +1,116 @@
-import React from 'react';
-import Dragula from 'dragula';
-import 'dragula/dist/dragula.css';
-import Swimlane from './Swimlane';
-import './Board.css';
+import React from "react";
+import Dragula from "dragula";
+import "dragula/dist/dragula.css";
+import Swimlane from "./Swimlane";
+import "./Board.css";
 
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
-    const clients = this.getClients();
+    // const clients = this.getClients();
     this.state = {
       clients: {
-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-        complete: clients.filter(client => client.status && client.status === 'complete'),
+        backlog: [],
+        inProgress: [],
+        complete: []
       }
-    }
+    };
     this.swimlanes = {
       backlog: React.createRef(),
       inProgress: React.createRef(),
-      complete: React.createRef(),
-    }
+      complete: React.createRef()
+    };
   }
-  getClients() {
-    return [
-      ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
-      ['2','Wiza LLC','Exclusive Bandwidth-Monitored Implementation', 'complete'],
-      ['3','Nolan LLC','Vision-Oriented 4Thgeneration Graphicaluserinterface', 'backlog'],
-      ['4','Thompson PLC','Streamlined Regional Knowledgeuser', 'in-progress'],
-      ['5','Walker-Williamson','Team-Oriented 6Thgeneration Matrix', 'in-progress'],
-      ['6','Boehm and Sons','Automated Systematic Paradigm', 'backlog'],
-      ['7','Runolfsson, Hegmann and Block','Integrated Transitional Strategy', 'backlog'],
-      ['8','Schumm-Labadie','Operative Heuristic Challenge', 'backlog'],
-      ['9','Kohler Group','Re-Contextualized Multi-Tasking Attitude', 'backlog'],
-      ['10','Romaguera Inc','Managed Foreground Toolset', 'backlog'],
-      ['11','Reilly-King','Future-Proofed Interactive Toolset', 'complete'],
-      ['12','Emard, Champlin and Runolfsdottir','Devolved Needs-Based Capability', 'backlog'],
-      ['13','Fritsch, Cronin and Wolff','Open-Source 3Rdgeneration Website', 'complete'],
-      ['14','Borer LLC','Profit-Focused Incremental Orchestration', 'backlog'],
-      ['15','Emmerich-Ankunding','User-Centric Stable Extranet', 'in-progress'],
-      ['16','Willms-Abbott','Progressive Bandwidth-Monitored Access', 'in-progress'],
-      ['17','Brekke PLC','Intuitive User-Facing Customerloyalty', 'complete'],
-      ['18','Bins, Toy and Klocko','Integrated Assymetric Software', 'backlog'],
-      ['19','Hodkiewicz-Hayes','Programmable Systematic Securedline', 'backlog'],
-      ['20','Murphy, Lang and Ferry','Organized Explicit Access', 'backlog'],
-    ].map(companyDetails => ({
-      id: companyDetails[0],
-      name: companyDetails[1],
-      description: companyDetails[2],
-      status: companyDetails[3],
-    }));
-  }
+
   renderSwimlane(name, clients, ref) {
-    return (
-      <Swimlane name={name} clients={clients} dragulaRef={ref}/>
-    );
+    return <Swimlane name={name} clients={clients} dragulaRef={ref} />;
   }
   // check if component mounted
   componentDidMount() {
     // initialize function for drag and drop
     this.initializeDragula();
+    this.fetchClients(); // Call fetchClients when the component mounts
+  }
+  api = "http://localhost:3001/api/v1";
+
+  async fetchClients() {
+    try {
+      const response = await fetch(`${this.api}/clients`);
+      const clients = await response.json();
+      this.setClients(clients);
+    } catch (error) {
+      throw new Error("Error fetching clients:", error);
+    }
   }
 
+  async changePriorityAPI(id, priority, status) {
+    const url = `${this.api}/clients/${id}`;
+    const data = {
+      priority: priority,
+      status: status
+    };
+    const body = JSON.stringify(data);
+    const header = {
+      "Content-Type": "application/json"
+      // add headers to prevent cors error
+    };
+    try {
+       const response  = await fetch(url, {
+        method: "PUT",
+        headers: header,
+        body: body
+      });
+      const result = await response.json()
+      return result;
+
+    } catch (error) {
+      throw new Error("Error updating values",error);
+    }
+  }
+  filterClients(clients, status){
+    return clients.filter(
+      client => !client.status || client.status === `${status}`
+    ).sort((cur, nxt)=> cur.priority - nxt.priority)
+  }
+
+  setClients(clients) {
+    this.setState({
+      clients: {
+        backlog: this.filterClients(clients, "backlog"),
+        inProgress: this.filterClients(clients, "in-progress"),
+        complete: this.filterClients(clients, "complete")
+      }
+    });
+  }
+   changePriority(el, targetContainer, containers) {
+    const id = el.getAttribute("data-id");
+    const statusMapper = ["backlog", "in-progress", "complete"];
+
+    // const objectList = this.state.clients[origin];
+    var childList = targetContainer.children;
+    var childFound = false;
+    for (let childIdx = 0; childIdx < childList.length; childIdx++) {
+      var childId = childList[childIdx].getAttribute("data-id");
+      if (childId === id) {
+        childFound = true;
+      }
+      if (childFound) {
+        // var childObject = objectList.filter(child => child.id === id)
+        const target = statusMapper[containers.indexOf(targetContainer)];
+        this.changePriorityAPI(childId, childIdx + 1, target)
+        .then(value=>{
+          console.log(value);
+          // this.setClients(value);   
+        });
+      }
+    }
+  }
   /**
    * feature function for dragging and dropping and updating the details
    */
   initializeDragula() {
     // map the container references to an array
-    const containers = Object.values(this.swimlanes).map((ref) => ref.current);
+    const containers = Object.values(this.swimlanes).map(ref => ref.current);
    
     /**
      * Function to change color and status of the card after dragging and dropping
@@ -75,27 +119,51 @@ export default class Board extends React.Component {
      */
     const changeCardAttributes = (cardElement, targetContainer) => {
       // find the index of the target container
-      const containerIndex = containers.indexOf(targetContainer)
+      const containerIndex = containers.indexOf(targetContainer);
 
       // use index as a mapper for class based on swimlane
-      const colorMapper = [ "Card-grey", "Card-blue", "Card-green" ]
-      const statusMapper = [ "backlog", "in-progress", "complete" ]
+      const colorMapper = ["Card-grey", "Card-blue", "Card-green"];
 
       // change the classsName of current card in order to change the color based on swimlane position
       cardElement.className = `Card ${colorMapper[containerIndex]} gu-transit`;
       // change the data-status based on swimlane
-      cardElement.setAttribute("data-status",statusMapper[containerIndex] );
-    }
-  
-    // initialize the drag and drop  package function
-    Dragula(containers)
-    // utilize the drop feature as it provides the target container
-      .on('drop', function (el, targetContainer) {
-        // call the change card attribute function 
-        changeCardAttributes(el, targetContainer);
-      })
-  }
+      // cardElement.setAttribute("data-status",statusMapper[containerIndex] );
 
+      // console.log(this.state.clients.complete);
+      // console.log(containers)
+    };
+    // find priority of an item
+  
+    // Initialize Dragula
+
+    // Track the dragged element
+    var draggedElement = null;
+
+    // Initialize the drag and drop package function
+    Dragula(containers)
+      .on("drag", function(el, source){
+        // el is the dragged element
+        draggedElement = el;
+      })
+      // Utilize the drop feature as it provides the target container
+      .on("drop", (el, targetContainer) => {
+        // Call the change card attribute function
+        changeCardAttributes(el, targetContainer);
+
+        // find the priority
+        this.changePriority(el, targetContainer, containers);
+        
+        // Check if draggedElement is not null before accessing its attributes
+        if (draggedElement) {
+          console.log(draggedElement);
+          // console.log(draggedElement.getAttribute('data-priority'));
+        } else {
+          console.log("Dragged element is null");
+        }
+
+        // updateClientList(el, targetContainer)
+      });
+  }
 
   render() {
     return (
@@ -103,13 +171,25 @@ export default class Board extends React.Component {
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-4">
-              {this.renderSwimlane('Backlog', this.state.clients.backlog, this.swimlanes.backlog)}
+              {this.renderSwimlane(
+                "Backlog",
+                this.state.clients.backlog,
+                this.swimlanes.backlog
+              )}
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane('In Progress', this.state.clients.inProgress, this.swimlanes.inProgress)}
+              {this.renderSwimlane(
+                "In Progress",
+                this.state.clients.inProgress,
+                this.swimlanes.inProgress
+              )}
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane('Complete', this.state.clients.complete, this.swimlanes.complete)}
+              {this.renderSwimlane(
+                "Complete",
+                this.state.clients.complete,
+                this.swimlanes.complete
+              )}
             </div>
           </div>
         </div>
