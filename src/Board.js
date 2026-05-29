@@ -13,12 +13,73 @@ export default class Board extends React.Component {
         backlog: clients.filter(client => !client.status || client.status === 'backlog'),
         inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
         complete: clients.filter(client => client.status && client.status === 'complete'),
-      }
+      },
+      allClients: clients,
     }
     this.swimlanes = {
       backlog: React.createRef(),
       inProgress: React.createRef(),
       complete: React.createRef(),
+    }
+    this.dragulaInstance = null;
+  }
+
+  componentDidMount() {
+    // Initialize Dragula with all three swimlane containers
+    const containers = [
+      this.swimlanes.backlog.current,
+      this.swimlanes.inProgress.current,
+      this.swimlanes.complete.current,
+    ];
+
+    this.dragulaInstance = Dragula(containers, {
+      moves: () => true,
+      accepts: () => true,
+      invalid: () => false,
+      direction: 'vertical',
+    });
+
+    // Handle drop event - update card status and color without re-rendering
+    this.dragulaInstance.on('drop', (el, target, source) => {
+      const cardId = el.getAttribute('data-id');
+      
+      // Determine the new status based on which swimlane the card was dropped into
+      let newStatus = 'backlog';
+      let colorClass = 'Card-grey';
+      
+      if (target === this.swimlanes.inProgress.current) {
+        newStatus = 'in-progress';
+        colorClass = 'Card-blue';
+      } else if (target === this.swimlanes.complete.current) {
+        newStatus = 'complete';
+        colorClass = 'Card-green';
+      }
+
+      // Update the card element's data-status attribute directly
+      el.setAttribute('data-status', newStatus);
+      
+      // Update card color classes without React re-render
+      el.classList.remove('Card-grey', 'Card-blue', 'Card-green');
+      el.classList.add(colorClass);
+
+      // Update the data in state for persistence (but don't update swimlane layout)
+      const updatedClients = this.state.allClients.map(client => {
+        if (client.id === cardId) {
+          return { ...client, status: newStatus };
+        }
+        return client;
+      });
+
+      this.setState({
+        allClients: updatedClients,
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    // Destroy Dragula instance on unmount
+    if (this.dragulaInstance) {
+      this.dragulaInstance.destroy();
     }
   }
   getClients() {

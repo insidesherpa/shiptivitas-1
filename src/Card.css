@@ -23,3 +23,10 @@
 .Card-title {
   font-weight: bold;
 }
+
+.Card-description {
+  font-size: 11px;
+  margin-top: 6px;
+  opacity: 0.85;
+  line-height: 1.3;
+}
