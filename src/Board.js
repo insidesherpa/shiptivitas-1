@@ -7,12 +7,12 @@ import './Board.css';
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
-    const clients = this.getClients();
+    const clients = this.getClients().map(client => ({ ...client, status: 'backlog' }));
     this.state = {
       clients: {
-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-        complete: clients.filter(client => client.status && client.status === 'complete'),
+        backlog: clients,
+        inProgress: [],
+        complete: [],
       }
     }
     this.swimlanes = {
@@ -21,6 +21,106 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     }
   }
+
+  componentDidMount() {
+    const containers = [
+      this.swimlanes.backlog.current,
+      this.swimlanes.inProgress.current,
+      this.swimlanes.complete.current,
+    ];
+
+    this.drake = Dragula(containers);
+
+    this.drake.on('drop', (el, target, source, sibling) => {
+      const clientId = el.getAttribute('data-id');
+      let targetLane = '';
+      if (target === this.swimlanes.backlog.current) 
+        targetLane = 'backlog';
+
+      else if (target === this.swimlanes.inProgress.current) 
+        targetLane = 'inProgress';
+
+      else if (target === this.swimlanes.complete.current) 
+        targetLane = 'complete';
+
+      let sourceLane = '';
+
+      if (source === this.swimlanes.backlog.current) 
+        sourceLane = 'backlog';
+
+      else if (source === this.swimlanes.inProgress.current) 
+        sourceLane = 'inProgress';
+
+      else if (source === this.swimlanes.complete.current) 
+        sourceLane = 'complete';
+
+      if (!targetLane || !sourceLane) 
+        return;
+
+      const backlogList = Array.from(this.state.clients.backlog);
+
+      const inProgressList = Array.from(this.state.clients.inProgress);
+
+      const completeList = Array.from(this.state.clients.complete);
+
+      const lists = {
+        backlog: backlogList,
+        inProgress: inProgressList,
+        complete: completeList
+      };
+
+      const sourceList = lists[sourceLane];
+      const targetList = lists[targetLane];
+
+      const clientIndex = sourceList.findIndex(c => c.id === clientId);
+
+      if (clientIndex === -1) 
+        return;
+
+      const [client] = sourceList.splice(clientIndex, 1);
+
+      let newStatus = 'backlog';
+
+      if (targetLane === 'inProgress') 
+        newStatus = 'in-progress';
+
+      else if (targetLane === 'complete') newStatus = 'complete';
+
+      const updatedClient = {
+        ...client,
+        status: newStatus
+      };
+
+      let insertIndex = targetList.length;
+      if (sibling) {
+        const siblingId = sibling.getAttribute('data-id');
+        insertIndex = targetList.findIndex(c => c.id === siblingId);
+        
+        if (insertIndex === -1) {
+          insertIndex = targetList.length;
+        }
+      }
+
+      targetList.splice(insertIndex, 0, updatedClient);
+
+      this.drake.cancel(true);
+
+      this.setState({
+        clients: {
+          backlog: backlogList,
+          inProgress: inProgressList,
+          complete: completeList
+        }
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.drake) {
+      this.drake.destroy();
+    }
+  }
+
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
