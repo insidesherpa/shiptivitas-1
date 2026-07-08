@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiptivitas Kanban Board Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .Board {
+            margin-top: 12px;
+        }
+        .container-fluid {
+            width: 100%;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col-md-4 {
+            flex: 1;
+            min-width: 300px;
+        }
+        .Swimlane-column {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .Swimlane-title {
+            text-align: left;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .Swimlane-dragColumn {
+            min-height: 400px;
+            background-color: #f5f5f5;
+            padding: 16px 8px;
+            border-radius: 4px;
+        }
+        .Card {
+            background-color: lightgrey;
+            font-size: 12px;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: move;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .Card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .Card-grey {
+            background-color: rgba(167, 158, 158, 0.671);
+            color: black;
+        }
+        .Card-blue {
+            background-color: skyblue;
+            color: white;
+        }
+        .Card-green {
+            background-color: rgb(150, 190, 150);
+            color: white;
+        }
+        .Card-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shiptivitas - Kanban Board Preview</h1>
+    
+    <div class="note">
+        <strong>Note:</strong> This is a static preview. The actual React app with drag-and-drop functionality requires Node.js 11.10.0. 
+        Your system has Node.js 24.12.0 which is incompatible with this legacy project.
+    </div>
+
+    <div class="Board">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="Swimlane-column">
+                        <div class="Swimlane-title">Backlog</div>
+                        <div class="Swimlane-dragColumn">
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Nolan LLC</div>
+                                <div>Vision-Oriented 4Thgeneration Graphicaluserinterface</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Boehm and Sons</div>
+                                <div>Automated Systematic Paradigm</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Runolfsson, Hegmann and Block</div>
+                                <div>Integrated Transitional Strategy</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Schumm-Labadie</div>
+                                <div>Operative Heuristic Challenge</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Kohler Group</div>
+                                <div>Re-Contextualized Multi-Tasking Attitude</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Romaguera Inc</div>
+                                <div>Managed Foreground Toolset</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Emard, Champlin and Runolfsdottir</div>
+                                <div>Devolved Needs-Based Capability</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Borer LLC</div>
+                                <div>Profit-Focused Incremental Orchestration</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Bins, Toy and Klocko</div>
+                                <div>Integrated Assymetric Software</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Hodkiewicz-Hayes</div>
+                                <div>Programmable Systematic Securedline</div>
+                            </div>
+                            <div class="Card Card-grey">
+                                <div class="Card-title">Murphy, Lang and Ferry</div>
+                                <div>Organized Explicit Access</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="Swimlane-column">
+                        <div class="Swimlane-title">In Progress</div>
+                        <div class="Swimlane-dragColumn">
+                            <div class="Card Card-blue">
+                                <div class="Card-title">Stark, White and Abbott</div>
+                                <div>Cloned Optimal Architecture</div>
+                            </div>
+                            <div class="Card Card-blue">
+                                <div class="Card-title">Thompson PLC</div>
+                                <div>Streamlined Regional Knowledgeuser</div>
+                            </div>
+                            <div class="Card Card-blue">
+                                <div class="Card-title">Walker-Williamson</div>
+                                <div>Team-Oriented 6Thgeneration Matrix</div>
+                            </div>
+                            <div class="Card Card-blue">
+                                <div class="Card-title">Emmerich-Ankunding</div>
+                                <div>User-Centric Stable Extranet</div>
+                            </div>
+                            <div class="Card Card-blue">
+                                <div class="Card-title">Willms-Abbott</div>
+                                <div>Progressive Bandwidth-Monitored Access</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="Swimlane-column">
+                        <div class="Swimlane-title">Complete</div>
+                        <div class="Swimlane-dragColumn">
+                            <div class="Card Card-green">
+                                <div class="Card-title">Wiza LLC</div>
+                                <div>Exclusive Bandwidth-Monitored Implementation</div>
+                            </div>
+                            <div class="Card Card-green">
+                                <div class="Card-title">Reilly-King</div>
+                                <div>Future-Proofed Interactive Toolset</div>
+                            </div>
+                            <div class="Card Card-green">
+                                <div class="Card-title">Fritsch, Cronin and Wolff</div>
+                                <div>Open-Source 3Rdgeneration Website</div>
+                            </div>
+                            <div class="Card Card-green">
+                                <div class="Card-title">Brekke PLC</div>
+                                <div>Intuitive User-Facing Customerloyalty</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
