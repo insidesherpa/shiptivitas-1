@@ -20,7 +20,105 @@ export default class Board extends React.Component {
       inProgress: React.createRef(),
       complete: React.createRef(),
     }
+     this.originalPosition = {
+      parent: null,
+      nextSibling: null,
+    };
   }
+
+   
+
+  componentDidMount() {
+  const drake = Dragula([
+    this.swimlanes.backlog.current,
+    this.swimlanes.inProgress.current,
+    this.swimlanes.complete.current,
+  ]);
+
+  drake.on('drag', element => {
+    this.originalPosition = {
+      parent: element.parentNode,
+      nextSibling: element.nextSibling,
+    };
+  });
+
+  drake.on('drop', (element, target, source, sibling) => {
+    const { parent, nextSibling } = this.originalPosition;
+
+    if (nextSibling && nextSibling.parentNode === parent) {
+      parent.insertBefore(element, nextSibling);
+    } else {
+      parent.appendChild(element);
+    }
+
+    this.handleDrop(element, target, source, sibling);
+  });
+
+  this.drake = drake;
+}
+  handleDrop(element, target, source, sibling) {
+  const clientId = element.dataset.id;
+  const sourceStatus = source.dataset.status;
+  const targetStatus = target.dataset.status;
+  const siblingId = sibling ? sibling.dataset.id : null;
+
+  this.setState(prevState => {
+    const clients = {
+      backlog: [...prevState.clients.backlog],
+      inProgress: [...prevState.clients.inProgress],
+      complete: [...prevState.clients.complete],
+    };
+
+    const sourceLane =
+      sourceStatus === 'backlog'
+        ? 'backlog'
+        : sourceStatus === 'in-progress'
+          ? 'inProgress'
+          : 'complete';
+
+    const targetLane =
+      targetStatus === 'backlog'
+        ? 'backlog'
+        : targetStatus === 'in-progress'
+          ? 'inProgress'
+          : 'complete';
+
+    const clientIndex = clients[sourceLane].findIndex(
+      client => client.id === clientId
+    );
+
+    if (clientIndex === -1) {
+      return null;
+    }
+
+    const [movedClient] = clients[sourceLane].splice(clientIndex, 1);
+
+const updatedClient = {
+  ...movedClient,
+  status: targetStatus,
+};
+
+    let insertIndex;
+
+    if (siblingId) {
+      insertIndex = clients[targetLane].findIndex(
+        client => client.id === siblingId
+      );
+    } else {
+      insertIndex = clients[targetLane].length;
+    }
+
+    if (insertIndex === -1) {
+      insertIndex = clients[targetLane].length;
+    }
+
+    clients[targetLane].splice(insertIndex, 0, updatedClient);
+
+    return {
+      clients,
+    };
+  });
+}
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -50,25 +148,44 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
-  renderSwimlane(name, clients, ref) {
-    return (
-      <Swimlane name={name} clients={clients} dragulaRef={ref}/>
-    );
-  }
-
+  renderSwimlane(name, status, clients, ref) {
+  return (
+    <Swimlane
+      name={name}
+      status={status}
+      clients={clients}
+      dragulaRef={ref}
+    />
+  );
+}
   render() {
     return (
       <div className="Board">
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-4">
-              {this.renderSwimlane('Backlog', this.state.clients.backlog, this.swimlanes.backlog)}
+              {this.renderSwimlane(
+                'Backlog',
+                'backlog',
+                this.state.clients.backlog,
+                this.swimlanes.backlog
+              )}
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane('In Progress', this.state.clients.inProgress, this.swimlanes.inProgress)}
+              {this.renderSwimlane(
+                'In Progress',
+                'in-progress',
+                this.state.clients.inProgress,
+                this.swimlanes.inProgress
+              )}
             </div>
             <div className="col-md-4">
-              {this.renderSwimlane('Complete', this.state.clients.complete, this.swimlanes.complete)}
+              {this.renderSwimlane(
+                'Complete',
+                'complete',
+                this.state.clients.complete,
+                this.swimlanes.complete
+              )}
             </div>
           </div>
         </div>
