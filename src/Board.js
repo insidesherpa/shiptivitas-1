@@ -47,9 +47,41 @@ export default class Board extends React.Component {
       id: companyDetails[0],
       name: companyDetails[1],
       description: companyDetails[2],
-      status: companyDetails[3],
+      status: 'backlog',
     }));
   }
+ componentDidMount() {
+  this.dragula = Dragula([
+    this.swimlanes.backlog.current,
+    this.swimlanes.inProgress.current,
+    this.swimlanes.complete.current,
+  ]);
+
+  this.dragula.on('drop', (el, target) => {
+    let newStatus;
+
+    if (target === this.swimlanes.backlog.current) {
+      newStatus = 'backlog';
+    } else if (target === this.swimlanes.inProgress.current) {
+      newStatus = 'in-progress';
+    } else if (target === this.swimlanes.complete.current) {
+      newStatus = 'complete';
+    }
+
+    el.dataset.status = newStatus;
+
+    el.classList.remove('Card-grey', 'Card-blue', 'Card-green');
+
+    if (newStatus === 'backlog') {
+      el.classList.add('Card-grey');
+    } else if (newStatus === 'in-progress') {
+      el.classList.add('Card-blue');
+    } else if (newStatus === 'complete') {
+      el.classList.add('Card-green');
+    }
+  });
+}
+
   renderSwimlane(name, clients, ref) {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
