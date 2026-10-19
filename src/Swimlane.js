@@ -16,12 +16,22 @@ export default class Swimlane extends React.Component {
       );
     })
     return (
-      <div className="Swimlane-column">
-        <div className="Swimlane-title">{this.props.name}</div>
-        <div className="Swimlane-dragColumn" ref={this.props.dragulaRef}>
-          {cards}
-        </div>
-      </div>);
+  <div className="Swimlane-column">
+    <div className="Swimlane-title">{this.props.name}</div>
+
+    <div
+      className="Swimlane-dragColumn"
+      data-status={
+        this.props.name === 'In Progress'
+          ? 'in-progress'
+          : this.props.name.toLowerCase()
+      }
+      ref={this.props.dragulaRef}
+    >
+      {cards}
+    </div>
+  </div>
+);
   }
 
 }

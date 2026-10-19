@@ -9,18 +9,116 @@ export default class Board extends React.Component {
     super(props);
     const clients = this.getClients();
     this.state = {
-      clients: {
-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-        complete: clients.filter(client => client.status && client.status === 'complete'),
-      }
-    }
+  clients: {
+    backlog: clients.map(client => ({
+      ...client,
+      status: 'backlog',
+    })),
+    inProgress: [],
+    complete: [],
+  },
+};
     this.swimlanes = {
       backlog: React.createRef(),
       inProgress: React.createRef(),
       complete: React.createRef(),
     }
   }
+componentDidMount() {
+  const containers = [
+    this.swimlanes.backlog.current,
+    this.swimlanes.inProgress.current,
+    this.swimlanes.complete.current,
+  ].filter(Boolean);
+
+  this.dragula = Dragula(containers, {
+    moves: el => el.classList.contains('Card'),
+    accepts: (el,target) =>
+      target.classList.contains('Swimlane-dragColumn'),
+  });
+
+  // Remember where the card originally belongs in the DOM.
+  this.dragula.on('drag', el => {
+    this.dragOrigin = {
+      parent: el.parentNode,
+      nextSibling: el.nextSibling,
+    };
+  });
+
+  this.dragula.on('drop', this.handleDrop);
+}
+handleDrop = (el, target, source) => {
+  if (!target || !source) return;
+
+  const allClients = [
+    ...this.state.clients.backlog,
+    ...this.state.clients.inProgress,
+    ...this.state.clients.complete,
+  ];
+
+  const clientsById = new Map(
+    allClients.map(client => [String(client.id), client])
+  );
+
+  const nextClients = {
+    backlog: [],
+    inProgress: [],
+    complete: [],
+  };
+
+  const laneRefs = {
+    backlog: this.swimlanes.backlog,
+    'in-progress': this.swimlanes.inProgress,
+    complete: this.swimlanes.complete,
+  };
+
+  // Read the new order and statuses before restoring the DOM.
+  Object.entries(laneRefs).forEach(([status, ref]) => {
+    const container = ref.current;
+    if (!container) return;
+
+    const stateKey =
+      status === 'in-progress' ? 'inProgress' : status;
+
+    Array.from(container.children).forEach(cardElement => {
+      const client = clientsById.get(cardElement.dataset.id);
+      if (!client) return;
+
+      nextClients[stateKey].push({
+        ...client,
+        status,
+      });
+    });
+  });
+
+  // Restore the DOM to its original React-managed position.
+  // React can then apply the new order without conflicting
+  // with Dragula's direct DOM manipulation.
+  const origin = this.dragOrigin;
+
+  if (origin && origin.parent) {
+    if (
+      origin.nextSibling &&
+      origin.nextSibling.parentNode === origin.parent
+    ) {
+      origin.parent.insertBefore(el, origin.nextSibling);
+    } else {
+      origin.parent.appendChild(el);
+    }
+  }
+
+  this.dragOrigin = null;
+
+  // React now applies the new lane membership and card order.
+  this.setState({
+    clients: nextClients,
+  });
+};
+componentWillUnmount() {
+  if (this.dragula) {
+    this.dragula.destroy();
+  }
+}
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
