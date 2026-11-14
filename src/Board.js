@@ -21,6 +21,33 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     }
   }
+
+  componentDidMount() {
+  this.drake = Dragula([
+    this.swimlanes.backlog.current,
+    this.swimlanes.inProgress.current,
+    this.swimlanes.complete.current,
+  ]);
+
+  this.drake.on('drop', (el, target) => {
+    el.classList.remove('Card-grey', 'Card-blue', 'Card-green');
+    if(target === this.swimlanes.backlog.current){
+      el.classList.add('Card-grey');
+    }
+    if(target === this.swimlanes.inProgress.current){
+      el.classList.add('Card-blue');
+    }
+    if(target === this.swimlanes.complete.current){
+      el.classList.add('Card-green');
+    }
+  })
+}
+
+componentWillUnmount() {
+  if(this.drake) {
+    this.drake.destroy();
+  }
+}
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -47,7 +74,7 @@ export default class Board extends React.Component {
       id: companyDetails[0],
       name: companyDetails[1],
       description: companyDetails[2],
-      status: companyDetails[3],
+      status: 'backlog',
     }));
   }
   renderSwimlane(name, clients, ref) {
