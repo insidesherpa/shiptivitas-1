@@ -8,11 +8,12 @@ export default class Board extends React.Component {
   constructor(props) {
     super(props);
     const clients = this.getClients();
+    
     this.state = {
       clients: {
-        backlog: clients.filter(client => !client.status || client.status === 'backlog'),
-        inProgress: clients.filter(client => client.status && client.status === 'in-progress'),
-        complete: clients.filter(client => client.status && client.status === 'complete'),
+        backlog: clients, 
+        inProgress: [],
+        complete: [],
       }
     }
     this.swimlanes = {
@@ -21,6 +22,33 @@ export default class Board extends React.Component {
       complete: React.createRef(),
     }
   }
+
+  componentDidMount() {
+    this.drake = Dragula([
+      this.swimlanes.backlog.current,
+      this.swimlanes.inProgress.current,
+      this.swimlanes.complete.current,
+    ]);
+
+    this.drake.on('drop', (el, target) => {
+      el.classList.remove('Card-grey', 'Card-blue', 'Card-green');
+
+      if (target === this.swimlanes.backlog.current) {
+        el.classList.add('Card-grey');
+      } else if (target === this.swimlanes.inProgress.current) {
+        el.classList.add('Card-blue');
+      } else if (target === this.swimlanes.complete.current) {
+        el.classList.add('Card-green');
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.drake) {
+      this.drake.destroy();
+    }
+  }
+
   getClients() {
     return [
       ['1','Stark, White and Abbott','Cloned Optimal Architecture', 'in-progress'],
@@ -50,6 +78,7 @@ export default class Board extends React.Component {
       status: companyDetails[3],
     }));
   }
+
   renderSwimlane(name, clients, ref) {
     return (
       <Swimlane name={name} clients={clients} dragulaRef={ref}/>
